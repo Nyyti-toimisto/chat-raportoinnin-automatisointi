@@ -1,0 +1,23 @@
+.divider__container {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0;
+  gap: 0.7rem;
+}
+
+.divider__container p {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 4px 3px 4px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.divider__container img {
+  height: 175px;
+  width: 1px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+}

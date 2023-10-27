@@ -1,0 +1,16 @@
+.step__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 1rem;
+  gap: 2rem;
+}
+
+.step__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.9rem;
+  width: 20rem;
+}

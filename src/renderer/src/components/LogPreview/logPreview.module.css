@@ -1,0 +1,11 @@
+.container {
+  width: 80%;
+  min-width: 600px;
+  height: 400px;
+}
+
+.previewContent {
+  height: 80%;
+  border: 1px solid #ccc;
+  margin: 2rem;
+}

@@ -1,0 +1,45 @@
+.container {
+  height: 700px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.container h1 {
+  margin-left: 3rem;
+  margin-bottom: 2rem;
+}
+
+.body {
+  height: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.body > div {
+  width: 100%;
+  min-width: 0;
+  height: 80%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+.body > div > h3 {
+  position: absolute;
+  top: -1rem;
+}
+
+.footer {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid black;
+}

@@ -1,0 +1,8 @@
+.container {
+  max-width: 80%;
+  display: grid;
+  grid-auto-rows: auto;
+  grid-auto-columns: auto;
+  /* grid-template-columns: auto; */
+  grid-template-areas: 'a a';
+}

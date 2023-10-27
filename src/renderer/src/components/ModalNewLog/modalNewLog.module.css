@@ -1,0 +1,49 @@
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  gap: 3rem;
+}
+
+.right {
+  padding-top: 5rem;
+  padding-right: 2rem;
+  width: 30rem;
+}
+
+.left {
+  width: 80%;
+  min-width: 10rem;
+  padding: 2rem;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.leftFooterActions {
+  display: flex;
+  justify-content: space-around;
+  width: 20rem;
+  position: absolute;
+  bottom: 10%;
+}
+
+.exitButton {
+  font-size: 2.1rem;
+  color: rgb(209, 8, 8);
+  position: absolute;
+  right: 1.3rem;
+  top: 1.3rem;
+}
+
+.exitButton:hover {
+  cursor: pointer;
+  scale: 1.1;
+  transition: all 0.2s;
+}

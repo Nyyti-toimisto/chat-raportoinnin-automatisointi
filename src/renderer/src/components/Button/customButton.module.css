@@ -1,0 +1,29 @@
+button {
+  width: 100px;
+  aspect-ratio: 10/3;
+  border: none;
+  border-radius: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.1rem;
+}
+button:hover {
+  cursor: pointer;
+  scale: 1.1;
+  border: 1px solid black;
+  transition: 0.2s;
+}
+
+.invoke {
+  background-color: #397bf1;
+  color: white;
+}
+
+.cancel {
+  background-color: #e91616c0;
+  color: rgb(63, 36, 36);
+}
+
+.submit {
+  background-color: var(--tertiaryColor);
+  color: var(--fontSecondary);
+}

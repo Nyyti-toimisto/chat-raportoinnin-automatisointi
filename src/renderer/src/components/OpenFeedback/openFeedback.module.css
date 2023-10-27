@@ -1,0 +1,41 @@
+.container {
+  height: 80rem;
+  width: 90%;
+  overflow: auto;
+
+  border: 1px solid black;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+  margin: 1rem;
+  border-bottom: 1px solid black;
+}
+
+.header h3 {
+  position: relative;
+  left: 2rem;
+}
+
+.search {
+  display: flex;
+  height: 2rem;
+  gap: 1rem;
+}
+
+.search input {
+  width: 180px;
+  border-radius: 8px;
+  border: 1px solid rgb(162, 159, 159);
+  padding-left: 0.5rem;
+}
+
+
+.openFeedBackRow{
+  padding: 1rem 3rem 1rem 3rem;
+  border-bottom: 1px solid black;
+}
