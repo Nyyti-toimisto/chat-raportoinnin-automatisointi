@@ -15,6 +15,24 @@ export class ReadController {
     this.dao = dao;
   }
 
+  async getLatestFeedBackTimestamp(): Promise<string> {
+    return await new Promise((resolve, reject) => {
+      this.dao.db.all(`
+      SELECT date_submitted FROM feedback_pre
+      ORDER BY date_submitted DESC
+      LIMIT 1
+      `, (err, rows) => {
+        if (err) reject(err);
+        if (rows) {
+          const r = rows as { date_submitted: string }[];
+          resolve(r[0].date_submitted);
+        }
+        else reject('No rows returned on dates set');
+      });
+    });
+
+  }
+
   async getDateBarHighlights(): Promise<string[]> {
     const raw: string[] = await new Promise((resolve, reject) => {
       this.dao.db.all(`SELECT date_submitted FROM feedback_pre`, (err, rows) => {

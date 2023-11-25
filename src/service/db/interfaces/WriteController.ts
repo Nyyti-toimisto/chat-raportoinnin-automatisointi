@@ -24,8 +24,8 @@ export class WriteController {
   // Only after user has checked information is correct, a new chat
   // log with feedbacks begin to upload from state.
 
-  async setState(credentials: Credentials) {
-    const data = await fetchQueue(credentials, 'beginDate').catch((err) => {
+  async setState(credentials: Credentials, beginDate: string) {
+    const data = await fetchQueue(credentials, beginDate).catch((err) => {
       console.log(err)
       return null
     });
