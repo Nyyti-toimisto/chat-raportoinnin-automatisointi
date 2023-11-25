@@ -1,5 +1,4 @@
-import { unlink, existsSync } from 'fs';
-import { Dao, createTables } from '../dao';
+import { unlink } from 'fs';
 import { log } from 'console';
 import { ChatSession } from '../tables/chat_session';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
