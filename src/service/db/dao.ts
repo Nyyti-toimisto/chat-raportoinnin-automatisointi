@@ -1,5 +1,4 @@
 import { Database } from 'sqlite3';
-import { ChatSession } from './tables/chat_session';
 import { FeedbackPost, FeedbackPre } from './tables/feedback';
 import { DaoLogger } from '../../types';
 
@@ -25,12 +24,10 @@ export class Dao {
 }
 
 export const createTables = (dao: Dao) => {
-  const sessionTable = new ChatSession(dao);
   const feedbackPreTable = new FeedbackPre(dao);
   const feedbackPostTable = new FeedbackPost(dao);
 
   return {
-    sessionTable,
     feedbackPreTable,
     feedbackPostTable
   };

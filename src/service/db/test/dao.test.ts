@@ -1,8 +1,10 @@
 import { unlink } from 'fs';
 import { log } from 'console';
-import { ChatSession } from '../tables/chat_session';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
 import DbHandler from './util/dbHandler';
+import exp from 'constants';
+import { create } from 'domain';
+import { createTables } from '../dao';
 
 describe('open, (create), close and delete database', function () {
   const filepath = './testDb.db';
@@ -36,7 +38,12 @@ describe('open, (create), close and delete database', function () {
   });
 
   it('creates the tables', async () => {
-    await dbHandler.createTables();
+    await new Promise<void>((resolve) => {
+      createTables(dbHandler.dao);
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    })
   });
 
   it('should have created 6 tables', async () => {
@@ -44,13 +51,12 @@ describe('open, (create), close and delete database', function () {
       "SELECT name FROM sqlite_master WHERE type='table'",
       (err, rows: { name: string }[]) => {
         if (err) throw err;
-        if (rows.length !== 6) throw new Error('Wrong number of tables');
+        expect(rows.length).toBe(5);
 
         let tableNames = '';
         for (const row of rows) {
           tableNames += tableNames + row.name;
         }
-        expect(tableNames).toContain(ChatSession.tableName);
         expect(tableNames).toContain(FeedbackPost.tableName);
         expect(tableNames).toContain(FeedbackPost.name_question);
         expect(tableNames).toContain(FeedbackPost.name_answer);

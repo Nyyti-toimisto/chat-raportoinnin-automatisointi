@@ -1,5 +1,4 @@
 import { Credentials, NinQueue, NinSingeFeedback } from 'src/types';
-import { PrefillProps } from '../../renderer/src/components/ModalNewLog/steps/Prefill';
 import { fetchFeedbacks } from '../ninchat/api';
 
 export class StateMemory {
@@ -7,20 +6,18 @@ export class StateMemory {
     private feedBacks: NinSingeFeedback[] | null;
     private timestamp: any;
     private userCount: number; // usercount is calculated from feedbacks which contain exactly 3 questions
-    private header: PrefillProps['values'] | null;
+
 
     constructor() {
         this.rawQueue = null;
         this.timestamp = null;
-        this.header = null;
         this.userCount = 0;
         this.feedBacks = null;
     }
 
-    set(rawQueue: NinQueue['queue_transcripts'], header: PrefillProps['values']) {
+    set(rawQueue: NinQueue['queue_transcripts']) {
         this.timestamp = new Date();
         this.rawQueue = rawQueue;
-        this.header = header;
     }
 
     getRaw() {
@@ -69,10 +66,6 @@ export class StateMemory {
             },
             userCount: this.userCount
         };
-    }
-
-    getHeader() {
-        return this.header;
     }
 
     clear() {

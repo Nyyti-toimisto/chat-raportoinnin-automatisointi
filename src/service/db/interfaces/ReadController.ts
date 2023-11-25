@@ -1,15 +1,11 @@
 import moment from 'moment';
 import {
-  LogSummaryBaseStats,
-  OldestOrNewestRecord,
   PostFeedBackRecord,
   PostFeedBackQuestionSummary,
   PreFeedBackRecord,
   PreFeedBackStatsSummary
 } from '../../../types';
 import { Dao } from '../dao';
-import { ChatSession } from '../tables/chat_session';
-import { FeedbackPre, FeedbackPost } from '../tables/feedback';
 import { DateRangePipeProp } from '../../../main/events';
 import { edgeDate, groupAndCountAnswers, groupQuestions } from '../../util';
 
@@ -49,7 +45,6 @@ export class ReadController {
         `
         WITH fp_post AS (
           SELECT
-              fp.chat_id,
               fp.id,
               fp.user_id,
               fp.question,
@@ -59,7 +54,6 @@ export class ReadController {
               feedback_post fp),
           raw_result AS (
           SELECT
-              fp.chat_id,
               fp.date_submitted,
               fp.id,
               fp.user_id,
@@ -157,60 +151,4 @@ export class ReadController {
     return stats;
   }
 
-  async getLogPageSummary() {
-    const numbers: LogSummaryBaseStats = await new Promise((resolve, reject) => {
-      this.dao.db.get(
-        `
-                SELECT 
-                COUNT(sess.id) AS session_count,
-                SUM(sess.participant_count) AS total_participants,
-                COUNT(pre.id) AS pre_feedback_count,
-                COUNT(post.id) AS post_feedback_count
-                FROM ${ChatSession.tableName} sess
-                LEFT JOIN ${FeedbackPre.tableName} pre ON sess.id = pre.id
-                LEFT JOIN ${FeedbackPost.tableName} post ON sess.id = post.id;`,
-        (err, row) => {
-          if (err) reject(err);
-          if (row) resolve(row as LogSummaryBaseStats);
-          else reject('No rows returned on log page summary');
-        }
-      );
-    });
-
-    const otherRecords = async (whichOne: 'ASC' | 'DESC'): Promise<OldestOrNewestRecord> => {
-      return await new Promise((resolve, reject) => {
-        this.dao.db.get(
-          `
-                    SELECT 
-                        COUNT(sess.id) AS session_count,
-                        SUM(sess.participant_count) AS total_participants,
-                        COUNT(pre.id) AS pre_feedback_count,
-                        COUNT(post.id) AS post_feedback_count,
-                        chat_date,
-                        hosts
-                    FROM ${ChatSession.tableName} sess
-                    LEFT JOIN ${FeedbackPre.tableName} pre ON sess.id = pre.id
-                    LEFT JOIN ${FeedbackPost.tableName} post ON sess.id = post.id
-                    WHERE sess.id = (
-                        SELECT id 
-                        FROM ${ChatSession.tableName}
-                        ORDER BY chat_date ${whichOne}
-                        LIMIT 1
-                    );`,
-          (err, row) => {
-            if (err) reject(err);
-            if (row) resolve(row as OldestOrNewestRecord);
-            else reject('No rows returned on log page summary');
-          }
-        );
-      });
-    };
-
-
-    return {
-      ...numbers,
-      oldest: await otherRecords('ASC').then((record) => record),
-      newest: await otherRecords('DESC').then((record) => record)
-    };
-  }
 }

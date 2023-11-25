@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { sessionTable, testReader, testWriter } from '.';
+import { testReader, testWriter } from '.';
 
 // ipcMain listeners are defined in preload. They need to be invoked before they can be handled.
 // This is a security feature of Electron.
@@ -12,13 +12,6 @@ export type DateRangePipeProp = {
 };
 
 export const registerHandles = () => {
-  ipcMain.handle('test-invoke', async () => {
-    return sessionTable.getAll();
-  });
-
-  ipcMain.handle('log_summary', () => {
-    return testReader.getLogPageSummary();
-  });
 
   ipcMain.handle('summary_preFeedback', (_, dates: DateRangePipeProp) => {
     return testReader.getPreFeedbackStats(dates);
@@ -32,8 +25,8 @@ export const registerHandles = () => {
     return testReader.getDateBarHighlights();
   });
 
-  ipcMain.handle('newlog_load_state', (_, credentials, header) => {
-    return testWriter.setState(credentials, header);
+  ipcMain.handle('newlog_load_state', (_, credentials) => {
+    return testWriter.setState(credentials);
   });
 
   ipcMain.handle('newlog_process_state', () => {

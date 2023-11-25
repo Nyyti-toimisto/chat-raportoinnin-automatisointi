@@ -1,7 +1,7 @@
 import { Credentials, NinQueue, NinSingeFeedback } from 'src/types';
 import { StateMemory } from '../db/State';
 
-export const fetchQueue = (credentials: Credentials, date: string) => {
+export const fetchQueue = (credentials: Credentials, beginDate: string) => {
     const options = {
         method: 'POST',
         headers: {
@@ -13,7 +13,7 @@ export const fetchQueue = (credentials: Credentials, date: string) => {
             caller_auth: credentials.password,
             action: 'describe_queue_transcripts',
             queue_id: '8vqvq89d004us',
-            interval_begin: new Date(date).setHours(0, 0, 0, 0) / 1000
+            interval_begin: new Date(beginDate).setHours(0, 0, 0, 0) / 1000
             // interval_end: new Date(date).setHours(23, 59, 59, 0) / 1000 //time in seconds, not milli- or nanoseconds
         })
     };

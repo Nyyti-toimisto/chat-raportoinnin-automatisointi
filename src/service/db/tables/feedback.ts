@@ -6,7 +6,6 @@ import {
   FeedbackQuestionRecord,
   TChatSessionRecord
 } from '../../../types';
-import { ChatSession } from './chat_session';
 import md5 from 'md5';
 
 export class FeedbackPre {
@@ -17,13 +16,11 @@ export class FeedbackPre {
     this.dao = dao;
     const sql = `CREATE TABLE IF NOT EXISTS ${FeedbackPre.tableName} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            chat_id INTEGER NOT NULL,
             user_id TEXT NOT NULL,
             date_submitted TIMESTAMP NOT NULL,
             feeling TEXT NOT NULL,
             gender TEXT,
-            age TEXT,
-            FOREIGN KEY (chat_id) REFERENCES ${ChatSession.tableName}(id)
+            age TEXT
         );`;
     this.dao.db.run(sql, (err) => {
       if (err) {
@@ -34,14 +31,14 @@ export class FeedbackPre {
   }
 
   insert(data: FeedbackPreEntry): Promise<number | Error | null> {
-    const { chat_id, user_id, feeling, gender, age, date_submitted } = data;
+    const { user_id, feeling, gender, age, date_submitted } = data;
 
     return new Promise<number>((resolve, reject) => {
       this.dao.db.run(
         `INSERT INTO ${FeedbackPre.tableName} \
-                (chat_id, user_id, feeling, gender, age, date_submitted) \
-                VALUES (?,?,?,?,?,?)`,
-        [chat_id, user_id, feeling, gender, age, date_submitted],
+                (user_id, feeling, gender, age, date_submitted) \
+                VALUES (?,?,?,?,?)`,
+        [user_id, feeling, gender, age, date_submitted],
         function (err) {
           if (err) reject(err);
           resolve(this.lastID);
@@ -98,12 +95,10 @@ export class FeedbackPost {
     const sqlTable3 = `
             CREATE TABLE IF NOT EXISTS ${FeedbackPost.tableName} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            chat_id INTEGER NOT NULL,
             user_id TEXT NOT NULL,
             date_submitted TIMESTAMP NOT NULL,
             question INTEGER NOT NULL,
             answer INTEGER NOT NULL,
-            FOREIGN KEY (chat_id) REFERENCES ${ChatSession.tableName}(id),
             FOREIGN KEY (question) REFERENCES ${FeedbackPost.name_question}(hash),
             FOREIGN KEY (answer) REFERENCES ${FeedbackPost.name_answer}(hash)
         );`;
@@ -130,7 +125,7 @@ export class FeedbackPost {
   }
 
   async insert(data: FeedbackPostEntry): Promise<number | Error | null> {
-    const { chat_id, user_id, question, answer, date_submitted } = data;
+    const { user_id, question, answer, date_submitted } = data;
 
     const answerId = await this.getAnswerHash(answer);
     const questionId = await this.getQuestionHash(question);
@@ -138,9 +133,9 @@ export class FeedbackPost {
     return new Promise((resolve, reject) => {
       this.dao.db.run(
         `INSERT INTO ${FeedbackPost.tableName} \
-            (chat_id, user_id, question, answer, date_submitted) \
-            VALUES (?,?,?,?,?)`,
-        [chat_id, user_id, questionId, answerId, date_submitted],
+            (user_id, question, answer, date_submitted) \
+            VALUES (?,?,?,?)`,
+        [user_id, questionId, answerId, date_submitted],
         function (err) {
           if (err) reject(err);
           resolve(this.lastID);

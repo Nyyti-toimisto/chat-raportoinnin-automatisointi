@@ -18,7 +18,6 @@ export type DaoLogger = {
 };
 
 export type FeedbackPreEntry = {
-  chat_id: number;
   user_id: string;
   feeling: string;
   gender: string;
@@ -27,7 +26,6 @@ export type FeedbackPreEntry = {
 };
 
 export type FeedbackPostEntry = {
-  chat_id: number;
   user_id: string;
   question: string;
   answer: string;
@@ -68,7 +66,6 @@ export type LogSummaryRecord = {
 
 export type PreFeedBackRecord = {
   id: number;
-  chat_id: number;
   chat_date: string;
   user_id: string;
   date_submitted: string;
@@ -118,7 +115,6 @@ export type PreFeedBackStatsSummary = {
 };
 
 export type PostFeedBackRecord = {
-  chat_id: number;
   date_submitted: string;
   id: number;
   user_id: string;

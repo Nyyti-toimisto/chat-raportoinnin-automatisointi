@@ -10,9 +10,9 @@ import { ReadController } from '../service/db/interfaces/ReadController';
 export const filepath = './foo.db';
 export const dao = new Dao(filepath, daoLogger);
 
-export const { sessionTable, feedbackPreTable, feedbackPostTable } = createTables(dao);
+export const { feedbackPreTable, feedbackPostTable } = createTables(dao);
 
-export const testWriter = new WriteController(sessionTable, feedbackPreTable, feedbackPostTable);
+export const testWriter = new WriteController(feedbackPreTable, feedbackPostTable);
 export const testReader = new ReadController(dao);
 
 registerHandles();

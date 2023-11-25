@@ -16,14 +16,12 @@ const dateBarAPI = {
 };
 
 const logPageAPI = {
-  logSummary: (): Promise<void> => ipcRenderer.invoke('log_summary'),
   loadState: (credentials: Credentials, header: PrefillProps['values']): Promise<NinServerMeta> =>
     ipcRenderer.invoke('newlog_load_state', credentials, header),
   processState: (): Promise<boolean> => ipcRenderer.invoke('newlog_process_state')
 };
 
 const summaryPageAPI = {
-  testInvoke: (): Promise<void> => ipcRenderer.invoke('test-invoke'),
   logSummary: (): Promise<void> => ipcRenderer.invoke('log_summary'),
   summaryPreFeedback: (dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary> =>
     ipcRenderer.invoke('summary_preFeedback', dates),
@@ -52,6 +50,6 @@ if (process.contextIsolated) {
   window.summaryAPI = summaryPageAPI;
   // @ts-ignore (define in dts)
   window.dateBarAPI = dateBarAPI;
-// @ts-ignore (define in dts)
+  // @ts-ignore (define in dts)
   window.electron = electronAPI;
 }
