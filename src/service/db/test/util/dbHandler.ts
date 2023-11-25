@@ -3,7 +3,7 @@ import { Dao, createTables } from "../../dao";
 import { existsSync, unlink } from "fs";
 
 
-class dbHandler {
+export default class DbHandler {
 
     dao: Dao;
     filepath: string;
@@ -11,6 +11,7 @@ class dbHandler {
     constructor(filepath: string, tableLogger: (tableName: string, message: string) => void) {
         this.dao = new Dao(filepath, tableLogger);
         this.filepath = filepath;
+        
     }
 
     dbExists() {
@@ -34,8 +35,8 @@ class dbHandler {
           });
     }
 
-    async closeDb(){
-        return await new Promise<boolean>((resolve) => {
+    closeDb(){
+        return new Promise<boolean>((resolve) => {
             this.dao.db.close((err) => {
               if (err) {
                 resolve(false);

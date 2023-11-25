@@ -3,10 +3,12 @@ import { Dao, createTables } from '../dao';
 import { log } from 'console';
 import { ChatSession } from '../tables/chat_session';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
+import DbHandler from './util/dbHandler';
 
 describe('open, (create), close and delete database', function () {
   const filepath = './testDb.db';
-  let dao: Dao;
+  let dbHandler: DbHandler
+
 
   const tableLogger = (tableName: string, message: string) => {
     log(`Dao: ${tableName} - ${message}`);
@@ -23,7 +25,7 @@ describe('open, (create), close and delete database', function () {
 
   it('should open (and create) the database', async () => {
     await new Promise<void>((resolve) => {
-      dao = new Dao(filepath, tableLogger);
+      dbHandler = new DbHandler(filepath, tableLogger);
       setTimeout(() => {
         resolve();
       }, 500);
@@ -31,20 +33,15 @@ describe('open, (create), close and delete database', function () {
   });
 
   it('should have created the file', function () {
-    if (!existsSync('./testDb.db')) throw new Error('Database file not found');
+    if (!dbHandler.dbExists()) throw new Error('Database file not found');
   });
 
   it('creates the tables', async () => {
-    await new Promise<void>((resolve) => {
-      createTables(dao);
-      setTimeout(() => {
-        resolve();
-      }, 300);
-    });
+    await dbHandler.createTables();
   });
 
   it('should have created 6 tables', async () => {
-    dao.db.all(
+    dbHandler.dao.db.all(
       "SELECT name FROM sqlite_master WHERE type='table'",
       (err, rows: { name: string }[]) => {
         if (err) throw err;
@@ -66,22 +63,11 @@ describe('open, (create), close and delete database', function () {
   it('should close the database', async () => {
     let closed = false;
 
-    closed = await new Promise<boolean>((resolve) => {
-      dao.db.close((err) => {
-        if (err) {
-          resolve(false);
-        }
-      });
-      resolve(true);
-    });
+    closed = await dbHandler.closeDb();
     expect(closed).toBe(true);
   });
 
   afterAll(function () {
-    setTimeout(() => {
-      unlink(filepath, function (err) {
-        if (err) log(err);
-      });
-    }, 300);
+   dbHandler.removeDbFile();
   });
 });
