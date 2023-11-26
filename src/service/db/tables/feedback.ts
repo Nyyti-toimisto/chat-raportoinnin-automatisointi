@@ -130,6 +130,7 @@ export class FeedbackPost {
     const answerId = await this.getAnswerHash(answer);
     const questionId = await this.getQuestionHash(question);
 
+
     return new Promise((resolve, reject) => {
       this.dao.db.run(
         `INSERT INTO ${FeedbackPost.tableName} \
@@ -151,15 +152,15 @@ export class FeedbackPost {
       this.dao.db.get(
         `SELECT hash FROM ${FeedbackPost.name_answer} WHERE hash = ?`,
         [hash],
-        function (err, row: FeedbackAnswerRecord) {
+        (err, row: FeedbackAnswerRecord) => {
           if (err) {
-            reject(err);
+            this.log(err.message, true)
           }
           if (row) resolve(row.hash);
-          reject(false);
+          reject();
         }
       );
-    }).catch((err) => err);
+    }).catch(() => {})
 
     if (rowHash) return rowHash;
 
@@ -177,15 +178,15 @@ export class FeedbackPost {
       this.dao.db.get(
         `SELECT hash FROM ${FeedbackPost.name_question} WHERE hash = ?`,
         [hash],
-        function (err, row: FeedbackQuestionRecord) {
+        (err, row: FeedbackQuestionRecord)=>{
           if (err) {
-            reject(err);
+            this.log(err.message, true)
           }
           if (row) resolve(row.hash);
-          reject(false);
+          reject();
         }
       );
-    }).catch((err) => err);
+    }).catch(() => {})
 
     if (rowHash) return rowHash;
 
