@@ -18,14 +18,17 @@ export class ReadController {
   async getLatestFeedBackTimestamp(): Promise<string> {
     return await new Promise((resolve, reject) => {
       this.dao.db.all(`
-      SELECT date_submitted FROM feedback_pre
-      ORDER BY date_submitted DESC
-      LIMIT 1
+      SELECT MAX(date_submitted) AS latest FROM
+      (
+        SELECT date_submitted FROM feedback_post
+        UNION
+        SELECT date_submitted FROM feedback_pre
+      )
       `, (err, rows) => {
         if (err) reject(err);
         if (rows) {
-          const r = rows as { date_submitted: string }[];
-          resolve(r[0].date_submitted);
+          const r = rows as { latest: string }[];
+          resolve(r[0].latest);
         }
         else reject('No rows returned on dates set');
       });
@@ -58,6 +61,7 @@ export class ReadController {
     const closedOrOpenFeedbacks = closed ? 'NOT' : '';
 
     //TODO: have tablenames be dynamic as is with other queries
+    //TODO: separate the two, querying db and processing the data
     const raw: PostFeedBackRecord[] = await new Promise((resolve, reject) => {
       this.dao.db.all(
         `
@@ -107,6 +111,7 @@ export class ReadController {
     return processed;
   }
 
+  //TODO: separate the two, querying db and processing the data
   async getPreFeedbackStats(dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary | null> {
     const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
     const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
