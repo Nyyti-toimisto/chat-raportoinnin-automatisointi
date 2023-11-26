@@ -1,11 +1,7 @@
 import { epochToISO } from "../../util"
-import { createEvenlyRepeatedArray } from "./util/consts"
-
-
-
+import { createEvenlyRepeatedArray, doArraysIntersect } from "./util/consts"
 
 describe('Utilities tests', () => {
-
 
     it('Should convert ninchat seconds epoch to ISO time string', async () => {
 
@@ -40,6 +36,13 @@ describe('Utilities tests', () => {
         for (const element of array) {
             expect(result.filter(i => i === element)).toHaveLength(n)
         }
+
+    })
+
+    it('Checks if two arrays intersect', () => {
+
+        expect(doArraysIntersect([1, 2, 3], [3, 4, 5])).toBeTruthy()
+        expect(doArraysIntersect(['Peruna', 'Mansikka', 'Mustikka'], [3, 4, 5])).not.toBeTruthy()
 
     })
 

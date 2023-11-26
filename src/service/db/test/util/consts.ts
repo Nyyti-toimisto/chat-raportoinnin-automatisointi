@@ -23,6 +23,9 @@ export const createEvenlyRepeatedArray = <T,>(arr: T[], length: number) => {
     return result
 }
 
+export const doArraysIntersect = <T extends Array<T[0]>,>
+    (array1: T, array2: T): boolean => array1.some(item1 => array2.includes(item1))
+
 
 // mockdata for service/ninchat/api.ts fetchQueue function
 export const queueMockData = (length: number) => {

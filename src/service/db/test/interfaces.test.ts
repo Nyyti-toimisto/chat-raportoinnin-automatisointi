@@ -4,12 +4,18 @@ import { ReadController } from '../interfaces/ReadController';
 import { WriteController } from '../interfaces/WriteController';
 import { createTables } from '../dao';
 import * as api from '../../ninchat/api';
-import { feedbackMockData, queueMockData } from './util/consts';
+import { doArraysIntersect, feedbackMockData, queueMockData } from './util/consts';
 import { epochToISO } from '../../util';
-import { NinQueue, NinSingeFeedback } from '../../../types';
+import { NinQueue, PostFeedBackQuestionSummary, PreFeedBackStatsSummary } from '../../../types';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
-import moment from 'moment';
+import { writeFileSync } from 'fs';
 
+
+// Test suite tests the journey of the data from inserting it to database
+// to reading it through the interfaces. Logic testing relies on mockdata
+// being deterministic, and it has been chosen to be uniformally distributed.
+// 50% of the feedbacks are prefeedbacks, and 50% are postfeedbacks, and
+// every answer is answered equally amount of times.
 
 describe('Reads and writes to database', () => {
   const filepath = './testDb2.db';
@@ -23,7 +29,8 @@ describe('Reads and writes to database', () => {
   const readController = new ReadController(db.dao);
   const writeController = new WriteController(feedbackPreTable, feedbackPostTable);
 
-  const NUMBER_OF_FEEDBACKS = 30
+
+  const NUMBER_OF_FEEDBACKS = 120 // LCM*2 of 3,4,5
 
   it('Artificially waits for database to be ready', async () => {
     await new Promise<void>((resolve) => {
@@ -54,7 +61,7 @@ describe('Reads and writes to database', () => {
     await writeController.setState({
       username: 'user',
       password: 'nomnomnom'
-    }, '10-11-2023')
+    }, 'YYYY-MM-DD')
 
 
     const feedbacks = writeController.state.getFeedbacks()
@@ -128,27 +135,93 @@ describe('Reads and writes to database', () => {
     expect(newRowCount.pre - oldRowCount.pre).toBe(statistics!.userCount)
     expect(oldRowCount.post).toBeLessThan(newRowCount.post)
 
-    // in the mockdata, freeform answers are geenrated randomly
-    // therefore it is almost guaranteed to increase
     expect(oldRowCount.postAnswer).toBeLessThan(newRowCount.postAnswer)
 
     // number of questions do not increase randomly and therefore not tested
 
-  });
+  }, 5000); // increase if increasing number of feedbacks
 
-  it('Reads all preFeedbacks if not specifying the dates', async () => {
+  describe('Reads pre feedbacks from database without date range', () => {
+    let feedbacks: PreFeedBackStatsSummary | null
 
-    const feedbacks = await readController.getPreFeedbackStats({ start: undefined, end: undefined })
+    it('Fetches prefeedbacks', async () => {
+      feedbacks = await readController.getPreFeedbackStats(
+        { start: undefined, end: undefined })
+    })
 
-    expect(feedbacks).toBeTruthy()
-    expect(new Date(feedbacks!.range.start).getTime())
-      .toBeLessThan(new Date(feedbacks!.range.end).getTime())
-    
+    it('Received feedback and has beginning and an end', async () => {
+      expect(feedbacks).toBeTruthy()
+      expect(new Date(feedbacks!.range.start).getTime())
+        .toBeLessThan(new Date(feedbacks!.range.end).getTime())
+    })
+
+    it('Parses statistics correctly', async () => {
+      const numberOfPrefeedbacks = NUMBER_OF_FEEDBACKS / 2
+
+      expect(feedbacks!.feels.positive).toBe(numberOfPrefeedbacks / 3)
+      expect(feedbacks!.feels.negative).toBe(numberOfPrefeedbacks / 3)
+      expect(feedbacks!.feels.neutral).toBe(numberOfPrefeedbacks / 3)
+      expect(feedbacks!.age['18-24']).toBe(numberOfPrefeedbacks / 5)
+      expect(feedbacks!.age['25-29']).toBe(numberOfPrefeedbacks / 5)
+      expect(feedbacks!.age['30-35']).toBe(numberOfPrefeedbacks / 5)
+      expect(feedbacks!.age['36-46']).toBe(numberOfPrefeedbacks / 5)
+      expect(feedbacks!.age['Ei sano']).toBe(numberOfPrefeedbacks / 5)
+      expect(feedbacks!.gender.male).toBe(numberOfPrefeedbacks / 4)
+      expect(feedbacks!.gender.female).toBe(numberOfPrefeedbacks / 4)
+      expect(feedbacks!.gender.other).toBe(numberOfPrefeedbacks / 4)
+      expect(feedbacks!.gender.unknow).toBe(numberOfPrefeedbacks / 4)
+
+    })
+
+    it('Maps feelings by week and year correctly', async () => {
+
+
+      feedbacks!.chart.feel.forEach((row) => {
+        expect(doArraysIntersect(
+          ['Positiivinen', 'Negatiivinen', 'Neutraali'], [row.feeling])).toBeTruthy()
+
+        expect(row.week).toBeLessThanOrEqual(52)
+        expect(row.week).toBeGreaterThanOrEqual(1)
+        expect(row.year).toBeGreaterThanOrEqual(1000)
+        expect(row.year).toBeLessThanOrEqual(9999)
+        expect(typeof row.id).toBe('number')
+      })
+    })
+  })
+
+  describe('Reads closed postfeedback without dates', () => {
+    let feedbacks: PostFeedBackQuestionSummary[] | null
+
+    it('Fetches feedbacks', async () => {
+      feedbacks = await readController.getPostFeedback(
+        { start: undefined, end: undefined }, true)
+        writeFileSync('./closedPost.json', JSON.stringify(feedbacks))
+    })
+
+    it('There are correct amount of questions summarized', () => {
+
+      expect(feedbacks).toBeTruthy()
+      // There are 9 questions in total, defined in mockdata.
+      expect(feedbacks).toHaveLength(9) 
+
+    })
+
+    it('Each question has even distribution of answers', () => {
+
+      feedbacks!.forEach((question) => {
+        const answerCount = Object.values(question.answers).map(i => i.count)
+        const max = Math.max(...answerCount)
+        const min = Math.min(...answerCount)
+        expect(max - min).toBeLessThanOrEqual(0)
+      })
+
+    })
   })
 
   // TODO 'Reads prefeedbacks within the date range'
-  // TODO 'Reads postfeedbacks if not specifying the dates'
+  //    - Mockdata needs to be refactored to be deterministic on the dates
   // TODO 'Reads postfeedbacks within the date range'
+  //   - Mockdata needs to be refactored to be deterministic on the dates
 
 
   afterAll(async () => {

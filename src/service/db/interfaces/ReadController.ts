@@ -160,6 +160,13 @@ export class ReadController {
         unknow: raw.filter((record) => record.gender === 'En halua sanoa').length
       },
       chart: {
+        // TODO: to improve performance if needed,
+        // instead of mapping each feeling with its week and year,
+        // thus sending large amounts of records,
+        // map instructions to the front end how to assemble this data
+        // itself. This way size of the array is limited
+        // to number of weeks in the date range rather than number of
+        // feedbacks.
         feel: raw.map((record) => {
           return {
             week: moment(record.date_submitted, 'YYYY-MM-DD').isoWeek(),
