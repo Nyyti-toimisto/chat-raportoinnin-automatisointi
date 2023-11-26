@@ -10,6 +10,8 @@ const randomFromArray = <T,>(arr: T[]) => {
     return arr[~~(Math.random() * arr.length)]
 }
 
+
+
 // mockdata for service/ninchat/api.ts fetchQueue function
 export const queueMockData = (length = 10) => {
 
@@ -17,7 +19,7 @@ export const queueMockData = (length = 10) => {
 
     for (let i = 0; i < length; i++) {
 
-
+        // insert way out there min and max dates to test edge cases
         const date = randomNinTimeStamp(1685087493000, 1700985093000)
 
         data.push({
@@ -32,6 +34,9 @@ export const queueMockData = (length = 10) => {
 }
 
 // mockdata for service/ninchat/api.ts fetchFeedbacks function
+// TODO: mockdata is now random data, random data cannot be tested for the logics
+// refactor in a way that there is a predefined outcome, i.e a set of data that
+// has known amount of pre and post feedbacks, feelings, genders, ages etc.
 export const feedbackMockData = (queues: NinQueue['queue_transcripts']) => {
 
     const data: NinSingeFeedback[] = []

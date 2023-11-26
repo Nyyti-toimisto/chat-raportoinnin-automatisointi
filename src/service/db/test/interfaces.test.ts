@@ -6,8 +6,9 @@ import { createTables } from '../dao';
 import * as api from '../../ninchat/api';
 import { feedbackMockData, queueMockData } from './util/consts';
 import { epochToISO } from '../../util';
-import { NinQueue } from '../../../types';
+import { NinQueue, NinSingeFeedback } from '../../../types';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
+import moment from 'moment';
 
 
 describe('Reads and writes to database', () => {
@@ -18,7 +19,7 @@ describe('Reads and writes to database', () => {
   };
   const db = new DbHandler(filepath, tableLogger);
   const { feedbackPostTable, feedbackPreTable } = createTables(db.dao);
-  
+
   const readController = new ReadController(db.dao);
   const writeController = new WriteController(feedbackPreTable, feedbackPostTable);
 
@@ -51,9 +52,9 @@ describe('Reads and writes to database', () => {
     // Credentials and begindate does not have any effect on the mockdata
     // they should be tested elsewhere
     await writeController.setState({
-      username: 'something',
-      password: 'something'
-    }, '10-08-2023')
+      username: 'user',
+      password: 'nomnomnom'
+    }, '10-11-2023')
 
 
     const feedbacks = writeController.state.getFeedbacks()
@@ -84,8 +85,8 @@ describe('Reads and writes to database', () => {
 
     const minDate = Math.min(...queue.map(i => i.complete_time))
     const maxDate = Math.max(...queue.map(i => i.complete_time))
-    
-    //epochToISO is tested separetly, therefore we shall trust it
+
+    //epochToISO is tested separetly
     expect(statistics!.dates.min).toBe(epochToISO(minDate))
     expect(statistics!.dates.max).toBe(epochToISO(maxDate))
 
@@ -97,10 +98,9 @@ describe('Reads and writes to database', () => {
 
     // General assumption is that there are less post feedbacks than pre feedbacks
     // each pre feedback is mandatory, yet post feedback is not
-    // if testing with low number of feedbacks, this might not be always true
-    // since feedbacks are randomly generated for testing
+    // for testing purposes, we test that user count logic works
     expect(statistics!.userCount).toBeLessThan(NUMBER_OF_FEEDBACKS)
-    
+
   });
 
   it('Processes the state and stores data in to database', async () => {
@@ -117,10 +117,15 @@ describe('Reads and writes to database', () => {
 
     const oldRowCount = await rowCounts()
     await writeController.processState()
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    })
     const newRowCount = await rowCounts()
 
     expect(oldRowCount.pre).toBeLessThan(newRowCount.pre)
-    expect(newRowCount.pre-oldRowCount.pre).toBe(statistics!.userCount)
+    expect(newRowCount.pre - oldRowCount.pre).toBe(statistics!.userCount)
     expect(oldRowCount.post).toBeLessThan(newRowCount.post)
 
     // in the mockdata, freeform answers are geenrated randomly
@@ -131,7 +136,19 @@ describe('Reads and writes to database', () => {
 
   });
 
-  
+  it('Reads all preFeedbacks if not specifying the dates', async () => {
+
+    const feedbacks = await readController.getPreFeedbackStats({ start: undefined, end: undefined })
+
+    expect(feedbacks).toBeTruthy()
+    expect(new Date(feedbacks!.range.start).getTime())
+      .toBeLessThan(new Date(feedbacks!.range.end).getTime())
+    
+  })
+
+  // TODO 'Reads prefeedbacks within the date range'
+  // TODO 'Reads postfeedbacks if not specifying the dates'
+  // TODO 'Reads postfeedbacks within the date range'
 
 
   afterAll(async () => {
@@ -148,7 +165,7 @@ describe('Reads and writes to database', () => {
       try {
         await db.removeDbFile();
         break
-        
+
       } catch (error) {
         counter++
       }
