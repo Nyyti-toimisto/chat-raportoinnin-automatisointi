@@ -1,4 +1,5 @@
 import { epochToISO } from "../../util"
+import { createEvenlyRepeatedArray } from "./util/consts"
 
 
 
@@ -29,6 +30,20 @@ describe('Utilities tests', () => {
         }
     })
 
+    it('Creates a array containing each element n times', () => {
+
+        const array = ['a', 'b', 'c']
+        const n = 9
+
+        const result = createEvenlyRepeatedArray(array, n)
+
+        for (const element of array) {
+            expect(result.filter(i => i === element)).toHaveLength(n)
+        }
+
+    })
 
 
 })
+
+
