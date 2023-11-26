@@ -47,13 +47,13 @@ export class WriteController {
 
       if (Object.keys(feedback.audience_metadata.pre_answers).length === 3) {
         await this.addPreFeedBackRecord(feedback).catch((err) => {
-          this.feedBackPreTable.log(err.message, true);
+          this.feedBackPreTable.log(err, true);
         });
       }
       else{
         for (const [question, answer] of Object.entries(feedback.audience_metadata.pre_answers)) {
           await this.addPostFeedBackRecord(question, answer, epochToISO(feedback.audience_metadata.complete_time ?? 0)).catch((err) => {
-            this.feedBackPostTable.log(err.message, true);
+            this.feedBackPostTable.log(err, true);
           })
         }
       }
