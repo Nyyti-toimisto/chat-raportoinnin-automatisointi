@@ -1,5 +1,6 @@
 import { Credentials, NinQueue, NinSingeFeedback } from 'src/types';
 import { fetchFeedbacks } from '../ninchat/api';
+import { epochToISO } from '../util';
 
 export class StateMemory {
     private rawQueue: NinQueue['queue_transcripts'] | null;
@@ -47,22 +48,16 @@ export class StateMemory {
         return {
             count: this.rawQueue.length,
             dates: {
-                min: new Date(
+                min: epochToISO(
                     Math.min(
-                        ...this.rawQueue.map((element) => {
-                            const d = new Date(element.complete_time*1000)
-                            return d.getTime();
-                        })
+                        ...this.rawQueue.map((element) => element.complete_time)
                     )
-                ).toISOString(),
-                max: new Date(
+                ),
+                max: epochToISO(
                     Math.max(
-                        ...this.rawQueue.map((element) => {
-                            const d = new Date(element.complete_time*1000)
-                            return d.getTime();
-                        })
+                        ...this.rawQueue.map((element) => element.complete_time)
                     )
-                ).toISOString()
+                )
             },
             userCount: this.userCount
         };

@@ -32,14 +32,14 @@ export const queueMockData = (length = 10) => {
 }
 
 // mockdata for service/ninchat/api.ts fetchFeedbacks function
-export const feedbackMockData = (length = 10) => {
+export const feedbackMockData = (queues: NinQueue['queue_transcripts']) => {
 
     const data: NinSingeFeedback[] = []
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < queues.length; i++) {
 
 
-        const date = randomNinTimeStamp(1685087493000, 1700985093000)
+        const date = queues[i].complete_time
         const feeling = ['Positiivinen', 'Neutraali', 'Negatiivinen']
         const scaleOfFive = ['Täysin samaa mieltä',
             'Jokseenkin samaa mieltä',
@@ -52,13 +52,13 @@ export const feedbackMockData = (length = 10) => {
             'Sosiaalinen media',
             'Muu']
 
-        const age = ['18-24','25-29','30-35','36-46','ei halua kertoa']
-        const gender = ['Mies','Nainen','Muu','ei halua kertoa']
+        const age = ['18-24', '25-29', '30-35', '36-46', 'ei halua kertoa']
+        const gender = ['Mies', 'Nainen', 'Muu', 'ei halua kertoa']
 
         data.push({
             audience_id: `audience${i}`,
             audience_members: {
-                [randomBytes(13).toString('hex').slice(0,13)]: {
+                [randomBytes(13).toString('hex').slice(0, 13)]: {
                     customer: true
                 }
             },
@@ -68,22 +68,22 @@ export const feedbackMockData = (length = 10) => {
                     environment: "default-reactive"
                 },
                 tag_ids: [],
-                pre_answers: Math.random() > 0.3 ? 
-                {
-                    "Fiilis": randomFromArray(feeling),
-                    "Sukupuoli": randomFromArray(gender),
-                    "Ikä": randomFromArray(age),
-                } 
-                :
-                {
-                    "Fiilis": randomFromArray(feeling),
-                    "Kokee tunteneensa yhteyttä toisiin": randomFromArray(scaleOfFive),
-                    "Sai vertaistukea": randomFromArray(scaleOfFive),
-                    "Kokee erillisyyden tuntemusten vähentyneen": randomFromArray(scaleOfFive),
-                    "Voimavarat vahvistuivat": randomFromArray(scaleOfFive),
-                    [randomFromArray(sourceOfReference)]: 'true',
-                    "Miten chat sujui": randomBytes(20).toString('hex')
-                },
+                pre_answers: Math.random() > 0.3 ?
+                    {
+                        "Fiilis": randomFromArray(feeling),
+                        "Sukupuoli": randomFromArray(gender),
+                        "Ikä": randomFromArray(age),
+                    }
+                    :
+                    {
+                        "Fiilis": randomFromArray(feeling),
+                        "Kokee tunteneensa yhteyttä toisiin": randomFromArray(scaleOfFive),
+                        "Sai vertaistukea": randomFromArray(scaleOfFive),
+                        "Kokee erillisyyden tuntemusten vähentyneen": randomFromArray(scaleOfFive),
+                        "Voimavarat vahvistuivat": randomFromArray(scaleOfFive),
+                        [randomFromArray(sourceOfReference)]: 'true',
+                        "Miten chat sujui": randomBytes(20).toString('hex')
+                    },
                 complete_time: date
             },
             event: "transcript_contents"
