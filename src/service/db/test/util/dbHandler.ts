@@ -19,11 +19,15 @@ export default class DbHandler {
     }
 
     removeDbFile() {
-        setTimeout(() => {
-            unlink(this.filepath, function (err) {
-                if (err) log(err);
-            });
-        }, 200);
+        return new Promise<void>((res, rej) => {
+            setTimeout(() => {
+                unlink(this.filepath, function (err) {
+                    if (err) rej(err);
+                    res()
+                });
+            }, 200);
+            
+        })
     }
 
 
@@ -38,6 +42,15 @@ export default class DbHandler {
         });
     }
 
-
+    getRowCount(tableName: string) {
+        return new Promise<number>((resolve, reject) => {
+            this.dao.db.get(`SELECT COUNT(*) FROM ${tableName}`, (err, row) => {
+                if (err) {
+                    reject(err.message);
+                }
+                resolve((row as {[key:string]:number})['COUNT(*)']);
+            });
+        });
+    }
 
 }
