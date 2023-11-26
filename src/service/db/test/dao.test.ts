@@ -16,7 +16,7 @@ describe('open, (create), close and delete database', function () {
   beforeAll(() => {
     unlink(filepath, (err) => {
       if (err) {
-        if (err.code === 'ENOENT') log('Good, no previous databases found');
+        if (err.code === 'ENOENT') tableLogger('system', 'No previous database file found');
         else throw err;
       }
     });
