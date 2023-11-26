@@ -53,7 +53,7 @@ export const feedbackMockData = (length = 10) => {
             'Muu']
 
         const age = ['18-24','25-29','30-35','36-46','ei halua kertoa']
-        const gender = ['Mies','Nainen','ei halua kertoa']
+        const gender = ['Mies','Nainen','Muu','ei halua kertoa']
 
         data.push({
             audience_id: `audience${i}`,
