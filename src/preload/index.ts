@@ -16,6 +16,7 @@ const dateBarAPI = {
 };
 
 const logPageAPI = {
+  logSummary: (): Promise<void> => ipcRenderer.invoke('log_summary'),
   loadState: (credentials: Credentials, header: PrefillProps['values']): Promise<NinServerMeta> =>
     ipcRenderer.invoke('newlog_load_state', credentials, header),
   processState: (): Promise<boolean> => ipcRenderer.invoke('newlog_process_state')

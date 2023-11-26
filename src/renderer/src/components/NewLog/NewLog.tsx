@@ -1,4 +1,4 @@
-import styles from './newlog.module.css';
+import styles from './newLog.module.css';
 import fillImage from '@renderer/assets/fill.svg';
 import checkImage from '@renderer/assets/check.svg';
 import { CustomButton } from '../Button/customButton';
