@@ -19,10 +19,8 @@ export class WriteController {
     this.state = new StateMemory();
   }
 
-  //Chat session prefill details are stored in state where raw feedbacks
-  // are stored along with metadata user provides in the prefill step
-  // Only after user has checked information is correct, a new chat
-  // log with feedbacks begin to upload from state.
+  // Only after user has checked information is correct,
+  // feedbacks begin to upload from state.
 
   async setState(credentials: Credentials, beginDate: string) {
     const data = await fetchQueue(credentials, beginDate).catch((err) => {

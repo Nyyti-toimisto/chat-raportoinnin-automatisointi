@@ -17,6 +17,7 @@ declare global {
       dateBarHighlights: () => Promise<string[]>;
     };
     logAPI: {
+      logSummary: () => Promise<LogSummaryRecord>;
       loadState: (credentials: Credentials, header: PrefillProps['values']) => Promise<NinServerMeta>;
       processState: () => Promise<boolean>;
     };

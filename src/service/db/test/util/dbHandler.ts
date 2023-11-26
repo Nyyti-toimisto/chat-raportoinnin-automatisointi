@@ -1,7 +1,6 @@
 import { log } from "console";
-import { Dao, createTables } from "../../dao";
+import { Dao } from "../../dao";
 import { existsSync, unlink } from "fs";
-import { FeedbackPost, FeedbackPre } from "../../tables/feedback";
 
 
 export default class DbHandler {
@@ -20,11 +19,11 @@ export default class DbHandler {
     }
 
     removeDbFile() {
-        setTimeout(() => {
-            unlink(this.filepath, function (err) {
-                if (err) log(err);
-            });
-        }, 300);
+        // setTimeout(() => {
+        //     unlink(this.filepath, function (err) {
+        //         if (err) log(err);
+        //     });
+        // }, 1300);
     }
 
 

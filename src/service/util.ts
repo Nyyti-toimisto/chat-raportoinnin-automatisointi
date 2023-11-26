@@ -1,4 +1,4 @@
-import { PostFeedBackRecord, PostFeedBackQuestionSummary, PreFeedBackRecord } from "src/types";
+import { PostFeedBackRecord, PostFeedBackQuestionSummary, PreFeedBackRecord } from "../types";
 
 
 type QuestionsGrouped = {

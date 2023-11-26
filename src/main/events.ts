@@ -25,6 +25,10 @@ export const registerHandles = () => {
     return testReader.getDateBarHighlights();
   });
 
+  ipcMain.handle('log_summary', () => {
+    return false
+  })
+
   ipcMain.handle('newlog_load_state', async (_, credentials) => {
     const latestFeedBackDate = await testReader.getLatestFeedBackTimestamp();
     return testWriter.setState(credentials, latestFeedBackDate);

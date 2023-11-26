@@ -22,6 +22,7 @@ const logPageAPI = {
 };
 
 const summaryPageAPI = {
+
   logSummary: (): Promise<void> => ipcRenderer.invoke('log_summary'),
   summaryPreFeedback: (dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary> =>
     ipcRenderer.invoke('summary_preFeedback', dates),
@@ -50,6 +51,6 @@ if (process.contextIsolated) {
   window.summaryAPI = summaryPageAPI;
   // @ts-ignore (define in dts)
   window.dateBarAPI = dateBarAPI;
-  // @ts-ignore (define in dts)
+// @ts-ignore (define in dts)
   window.electron = electronAPI;
 }

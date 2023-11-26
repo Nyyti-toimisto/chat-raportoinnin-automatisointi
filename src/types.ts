@@ -1,4 +1,4 @@
-import { RangeValue } from '@renderer/components/DateBar/DateBar';
+import { RangeValue } from './renderer/src/components/DateBar/DateBar';
 
 //TODO: organize types and get rid of overlaps
 

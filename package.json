@@ -72,7 +72,8 @@
             "ignoreCodes": [
               "TS151001"
             ]
-          }
+          },
+          "isolatedModules": true
         }
       ]
     },
