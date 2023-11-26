@@ -1,6 +1,6 @@
 import { NinQueue, NinSingeFeedback } from "../../../../types"
 import { randomBytes } from "crypto"
-import { writeFileSync } from "fs"
+
 // ninchat uses time in seconds not milliseconds
 function randomNinTimeStamp(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min) / 1000
