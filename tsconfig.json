@@ -1,5 +1,8 @@
 {
   "files": [],
+  "compilerOptions": {
+    "esModuleInterop": true // jest was being funny without this
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"
