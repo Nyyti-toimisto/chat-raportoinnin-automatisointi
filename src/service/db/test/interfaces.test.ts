@@ -8,7 +8,6 @@ import { doArraysIntersect, feedbackMockData, queueMockData } from './util/const
 import { epochToISO } from '../../util';
 import { NinQueue, PostFeedBackQuestionSummary, PreFeedBackStatsSummary } from '../../../types';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
-import { writeFileSync } from 'fs';
 
 
 // Test suite tests the journey of the data from inserting it to database
@@ -195,7 +194,6 @@ describe('Reads and writes to database', () => {
     it('Fetches feedbacks', async () => {
       feedbacks = await readController.getPostFeedback(
         { start: undefined, end: undefined }, true)
-        writeFileSync('./closedPost.json', JSON.stringify(feedbacks))
     })
 
     it('There are correct amount of questions summarized', () => {

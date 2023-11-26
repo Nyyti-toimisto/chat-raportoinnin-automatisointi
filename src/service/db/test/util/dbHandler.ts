@@ -1,6 +1,6 @@
 import { Dao } from "../../dao";
 import { existsSync, unlink } from "fs";
-
+import path from "path";
 
 export default class DbHandler {
 
@@ -8,8 +8,8 @@ export default class DbHandler {
     filepath: string;
 
     constructor(filepath: string, tableLogger: (tableName: string, message: string) => void) {
-        this.dao = new Dao(filepath, tableLogger);
-        this.filepath = filepath;
+        this.filepath = path.join(__dirname, filepath);
+        this.dao = new Dao(this.filepath, tableLogger);
 
     }
 

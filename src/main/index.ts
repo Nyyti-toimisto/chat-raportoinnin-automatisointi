@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow } from 'electron';
-import { join } from 'path';
+import path, { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 import { registerHandles } from './events';
@@ -7,7 +7,7 @@ import { Dao, createTables, daoLogger } from '../service/db/dao';
 import { WriteController } from '../service/db/interfaces/WriteController';
 import { ReadController } from '../service/db/interfaces/ReadController';
 
-export const filepath = './foo.db';
+export const filepath = path.join(__dirname, './nyytiDb.db')
 export const dao = new Dao(filepath, daoLogger);
 
 export const { feedbackPreTable, feedbackPostTable } = createTables(dao);
