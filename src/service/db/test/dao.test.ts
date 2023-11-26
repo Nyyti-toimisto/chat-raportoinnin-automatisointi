@@ -2,8 +2,6 @@ import { unlink } from 'fs';
 import { log } from 'console';
 import { FeedbackPost, FeedbackPre } from '../tables/feedback';
 import DbHandler from './util/dbHandler';
-import exp from 'constants';
-import { create } from 'domain';
 import { createTables } from '../dao';
 
 describe('open, (create), close and delete database', function () {
@@ -12,7 +10,7 @@ describe('open, (create), close and delete database', function () {
 
 
   const tableLogger = (tableName: string, message: string) => {
-    log(`Dao: ${tableName} - ${message}`);
+    log(`Database test: ${tableName} - ${message}`);
   };
 
   beforeAll(() => {
@@ -34,7 +32,7 @@ describe('open, (create), close and delete database', function () {
   });
 
   it('should have created the file', function () {
-    if (!dbHandler.dbExists()) throw new Error('Database file not found');
+    expect(dbHandler.dbExists()).toBe(true);
   });
 
   it('creates the tables', async () => {
