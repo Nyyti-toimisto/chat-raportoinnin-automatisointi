@@ -6,10 +6,6 @@ function randomNinTimeStamp(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min) / 1000
 }
 
-const randomFromArray = <T,>(arr: T[]) => {
-    return arr[~~(Math.random() * arr.length)]
-}
-
 // input: [1,2,3], 2
 // output: [1,1,2,2,3,3]
 export const createEvenlyRepeatedArray = <T,>(arr: T[], length: number) => {

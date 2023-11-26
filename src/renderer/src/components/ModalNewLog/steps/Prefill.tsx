@@ -2,6 +2,8 @@ import { Input } from 'antd';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 
+// TODO: Add type
+
 const { TextArea } = Input;
 
 export type PrefillProps = {
@@ -12,6 +14,7 @@ export type PrefillProps = {
     comments: string;
     details: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleChange: (event: any) => void;
 };
 

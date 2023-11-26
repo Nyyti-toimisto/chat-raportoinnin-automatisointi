@@ -231,7 +231,7 @@ describe('Reads and writes to database', () => {
     expect(closed).toBe(true);
 
     let counter = 0;
-    while (true) {
+    for(;;) {
       if (counter > 5) {
         throw new Error('Could not remove database file');
       }

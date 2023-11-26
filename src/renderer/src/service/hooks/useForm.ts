@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
-export const useCustomForm = (initialValues: any) => {
-  const [values, setValues] = useState(initialValues);
+// TODO: Add types
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useCustomForm = (initialValues:any) => {
+  const [values, setValues] = useState(initialValues);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
     try {
       setValues((values) => ({

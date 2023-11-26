@@ -5,8 +5,8 @@ import { DatePicker, theme } from 'antd';
 import dayjs from 'dayjs';
 import type { CellRenderInfo } from 'rc-picker/es/interface';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { RangeValue } from 'src/types';
 
-export type RangeValue = [dayjs.Dayjs | null, dayjs.Dayjs | null] | null;
 
 dayjs.extend(customParseFormat);
 

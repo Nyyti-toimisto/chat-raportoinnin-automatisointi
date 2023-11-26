@@ -5,19 +5,16 @@ import { epochToISO } from '../util';
 export class StateMemory {
     private rawQueue: NinQueue['queue_transcripts'] | null;
     private feedBacks: NinSingeFeedback[] | null;
-    private timestamp: any;
     private userCount: number; // usercount is calculated from feedbacks which contain exactly 3 questions
 
 
     constructor() {
         this.rawQueue = null;
-        this.timestamp = null;
         this.userCount = 0;
         this.feedBacks = null;
     }
 
     set(rawQueue: NinQueue['queue_transcripts']) {
-        this.timestamp = new Date();
         this.rawQueue = rawQueue;
     }
 
@@ -65,10 +62,5 @@ export class StateMemory {
 
     clear() {
         this.rawQueue = null;
-        this.timestamp = null;
-    }
-
-    isOlderThan(minutes: number) {
-        return new Date().getTime() - this.timestamp.getTime() > minutes * 60 * 1000;
     }
 }

@@ -1,5 +1,4 @@
-import { RangeValue } from './renderer/src/components/DateBar/DateBar';
-
+import dayjs from 'dayjs';
 //TODO: organize types and get rid of overlaps
 
 export type TChatSessionRecord = {
@@ -136,6 +135,9 @@ export type PostFeedBackQuestionSummary = {
   question: string;
   answers: PostFeedBackAnswerSummary;
 };
+
+export type RangeValue = [dayjs.Dayjs | null, dayjs.Dayjs | null] | null;
+
 
 export type DateProps = {
   dates: RangeValue;

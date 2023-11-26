@@ -1,4 +1,3 @@
-import { log } from "console";
 import { Dao } from "../../dao";
 import { existsSync, unlink } from "fs";
 
