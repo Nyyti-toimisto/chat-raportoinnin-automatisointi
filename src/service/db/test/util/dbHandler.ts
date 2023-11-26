@@ -19,11 +19,11 @@ export default class DbHandler {
     }
 
     removeDbFile() {
-        // setTimeout(() => {
-        //     unlink(this.filepath, function (err) {
-        //         if (err) log(err);
-        //     });
-        // }, 1300);
+        setTimeout(() => {
+            unlink(this.filepath, function (err) {
+                if (err) log(err);
+            });
+        }, 200);
     }
 
 
