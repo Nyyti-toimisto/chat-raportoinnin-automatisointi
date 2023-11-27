@@ -3,7 +3,9 @@ import {
   PostFeedBackRecord,
   PostFeedBackQuestionSummary,
   PreFeedBackRecord,
-  PreFeedBackStatsSummary
+  PreFeedBackStatsSummary,
+  LogSummaryBaseStats,
+  OldestOrNewestRecord
 } from '../../../types';
 import { Dao } from '../dao';
 import { DateRangePipeProp } from '../../../main/events';
@@ -179,6 +181,44 @@ export class ReadController {
     };
 
     return stats;
+  }
+
+
+  // TODO: nothing calls this yet. Should return statistics about pre and post
+  // feedbacks.
+  // Newest - oldest date
+  // How many days in total, participants (from pre_feedbacks)
+  // Adjust types LogSummaryBaseStats and OldestOrNewestRecord as needed
+  async getLogPageSummary() {
+
+    const numbers: LogSummaryBaseStats = await new Promise((resolve, reject) => {
+      this.dao.db.get(
+        ``,
+        (err, row) => {
+          if (err) reject(err);
+          if (row) resolve(row as LogSummaryBaseStats);
+          else reject('No rows returned on log page summary');
+        }
+      );
+    });
+
+    const otherRecords = async (whichOne: 'ASC' | 'DESC'): Promise<OldestOrNewestRecord> => {
+      return await new Promise((resolve, reject) => {
+        this.dao.db.get(
+          ``,
+          (err, row) => {
+            if (err) reject(err);
+            if (row) resolve(row as OldestOrNewestRecord);
+            else reject('No rows returned on log page summary');
+          }
+        );
+      });
+    };
+    return {
+      ...numbers,
+      oldest: await otherRecords('ASC').then((record) => record),
+      newest: await otherRecords('DESC').then((record) => record)
+    };
   }
 
 }
