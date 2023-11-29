@@ -79,7 +79,6 @@ function Check(props: { userValues: PrefillProps['values']; serverValues: NinSer
             }
           }}
         >
-          <Descriptions title="Esitiedot" items={items} layout="vertical" />
           {loading ? <p>Loading...</p> : 
           <Descriptions title="Ninchat palautteet" items={ninchatItems} layout="vertical" />}
         </ConfigProvider>

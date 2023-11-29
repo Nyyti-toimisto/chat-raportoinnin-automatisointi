@@ -15,10 +15,10 @@ const stepItems = [
     title: 'Kirjaudu sisään',
     description: 'Omilla Ninchat tunnuksilla'
   },
-  {
-    title: 'Esitiedot',
-    description: 'Täytä chatin esitiedot'
-  },
+  //{
+  //  title: 'Esitiedot',
+  //  description: 'Täytä chatin esitiedot'
+  //},
   {
     title: 'Tarkista',
     description: 'Tarkista että tiedot on oikein'
@@ -42,8 +42,9 @@ const ModalNewLog = forwardRef(function ModalNewLog(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<{ status: number; statusText: string } | null>(null);
 
+
   const prefillInitialState: PrefillProps['values'] = {
-    date: '',
+    date: '12.10.2023 09:30:42',
     supervisors: '',
     topic: '',
     comments: '',
@@ -53,9 +54,9 @@ const ModalNewLog = forwardRef(function ModalNewLog(
 
   const stepComponents = {
     0: <Login onChange={setCredentials} />,
-    1: <Prefill values={values} handleChange={handleChange} />,
-    2: <Check userValues={values} serverValues={serverValues} loading={loading} />,
-    3: loading ? <p>Ladataan...</p> : <p>Valmista! Voit sulkea ikkunan</p>
+    //1: <Prefill values={values} handleChange={handleChange} />,
+    1: <Check userValues={values} serverValues={serverValues} loading={loading} />,
+    2: loading ? <p>Ladataan...</p> : <p>Valmista! Voit sulkea ikkunan</p>
   };
 
   const handleStateChange = (state: 1 | -1) => {

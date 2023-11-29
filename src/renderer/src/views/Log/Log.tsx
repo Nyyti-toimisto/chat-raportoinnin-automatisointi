@@ -1,7 +1,6 @@
 import NewLog from '@renderer/components/NewLog/NewLog';
 import styles from './log.module.css';
 import LogSummary from '@renderer/components/LogSummary/LogSummary';
-import LogPreview from '@renderer/components/LogPreview/LogPreview';
 import ReactModal from 'react-modal';
 import ModalNewLog from '@renderer/components/ModalNewLog/ModalNewLog';
 import { useRef, useState } from 'react';
@@ -22,7 +21,6 @@ function Log() {
     <div className={styles.log__view} id="modalParent">
       <NewLog clickHandler={modalClickHandler} />
       <LogSummary />
-      <LogPreview />
       <div className="footerElement"></div>
 
       <ReactModal
