@@ -1,44 +1,11 @@
 import { Descriptions, ConfigProvider } from 'antd';
 import type { DescriptionsProps } from 'antd';
-import { PrefillProps } from './Prefill';
 import { NinServerMeta } from 'src/types';
 import moment from 'moment';
 
-function Check(props: { userValues: PrefillProps['values']; serverValues: NinServerMeta | null , loading: boolean}) {
+function Check(props: { serverValues: NinServerMeta | null , loading: boolean}) {
   
-  const { userValues, serverValues, loading } = props;
-  const items: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: 'Päivämäärä',
-      children: userValues.date,
-      span: 1
-    },
-    {
-      key: '2',
-      label: 'Valvojat',
-      children: userValues.supervisors,
-      span: 1
-    },
-    {
-      key: '3',
-      label: 'Aihe',
-      children: userValues.topic,
-      span: 2
-    },
-    {
-      key: '4',
-      label: 'Miten chat sujui?',
-      children: userValues.comments,
-      span: 3
-    },
-    {
-      key: '5',
-      label: 'Muut kommentit',
-      children: userValues.details,
-      span: 4
-    }
-  ];
+  const { serverValues, loading } = props;
 
   const ninchatItems: DescriptionsProps['items'] = [
     {

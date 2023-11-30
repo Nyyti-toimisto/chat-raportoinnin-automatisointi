@@ -13,7 +13,7 @@ export const fetchQueue = (credentials: Credentials, beginDate: string) => {
             caller_auth: credentials.password,
             action: 'describe_queue_transcripts',
             queue_id: '8vqvq89d004us',
-            interval_begin: new Date(beginDate).setHours(0, 0, 0, 0) / 1000
+            interval_begin: new Date(beginDate).getTime() / 1000
             // interval_end: new Date(date).setHours(23, 59, 59, 0) / 1000 //time in seconds, not milli- or nanoseconds
         })
     };

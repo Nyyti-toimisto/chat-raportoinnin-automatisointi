@@ -6,7 +6,6 @@ import {
   PostFeedBackQuestionSummary,
   PreFeedBackStatsSummary
 } from '../types';
-import { PrefillProps } from 'src/renderer/src/components/ModalNewLog/steps/Prefill';
 import { electronAPI } from '@electron-toolkit/preload';
 
 // Custom APIs for renderer
@@ -17,8 +16,8 @@ const dateBarAPI = {
 
 const logPageAPI = {
   logSummary: (): Promise<void> => ipcRenderer.invoke('log_summary'),
-  loadState: (credentials: Credentials, header: PrefillProps['values']): Promise<NinServerMeta> =>
-    ipcRenderer.invoke('newlog_load_state', credentials, header),
+  loadState: (credentials: Credentials): Promise<NinServerMeta> =>
+    ipcRenderer.invoke('newlog_load_state', credentials),
   processState: (): Promise<boolean> => ipcRenderer.invoke('newlog_process_state')
 };
 

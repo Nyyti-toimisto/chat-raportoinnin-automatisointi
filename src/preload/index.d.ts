@@ -18,7 +18,7 @@ declare global {
     };
     logAPI: {
       logSummary: () => Promise<LogSummaryRecord>;
-      loadState: (credentials: Credentials, header: PrefillProps['values']) => Promise<NinServerMeta>;
+      loadState: (credentials: Credentials) => Promise<NinServerMeta>;
       processState: () => Promise<boolean>;
     };
     summaryAPI: {
