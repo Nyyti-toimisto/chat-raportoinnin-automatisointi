@@ -20,7 +20,8 @@ export class FeedbackPre {
             date_submitted TIMESTAMP NOT NULL,
             feeling TEXT NOT NULL,
             gender TEXT,
-            age TEXT
+            age TEXT,
+            hash TEXT NOT NULL UNIQUE
         );`;
     this.dao.db.run(sql, (err) => {
       if (err) {
@@ -32,13 +33,14 @@ export class FeedbackPre {
 
   insert(data: FeedbackPreEntry): Promise<number | Error | null> {
     const { user_id, feeling, gender, age, date_submitted } = data;
-
+    const hash = md5(user_id+date_submitted);
+    
     return new Promise<number>((resolve, reject) => {
       this.dao.db.run(
         `INSERT INTO ${FeedbackPre.tableName} \
-                (user_id, feeling, gender, age, date_submitted) \
-                VALUES (?,?,?,?,?)`,
-        [user_id, feeling, gender, age, date_submitted],
+                (user_id, feeling, gender, age, date_submitted, hash) \
+                VALUES (?,?,?,?,?,?)`,
+        [user_id, feeling, gender, age, date_submitted, hash],
         function (err) {
           if (err) reject(err);
           resolve(this.lastID);
@@ -99,6 +101,7 @@ export class FeedbackPost {
             date_submitted TIMESTAMP NOT NULL,
             question INTEGER NOT NULL,
             answer INTEGER NOT NULL,
+            hash TEXT NOT NULL UNIQUE,
             FOREIGN KEY (question) REFERENCES ${FeedbackPost.name_question}(hash),
             FOREIGN KEY (answer) REFERENCES ${FeedbackPost.name_answer}(hash)
         );`;
@@ -125,18 +128,18 @@ export class FeedbackPost {
   }
 
   async insert(data: FeedbackPostEntry): Promise<number | Error | null> {
-    const { user_id, question, answer, date_submitted } = data;
+    const { user_id, question, answer, date_submitted, audience_id } = data;
 
     const answerId = await this.getAnswerHash(answer);
     const questionId = await this.getQuestionHash(question);
-
+    const hash = md5(date_submitted+audience_id+question+answer);
 
     return new Promise((resolve, reject) => {
       this.dao.db.run(
         `INSERT INTO ${FeedbackPost.tableName} \
-            (user_id, question, answer, date_submitted) \
-            VALUES (?,?,?,?)`,
-        [user_id, questionId, answerId, date_submitted],
+            (user_id, question, answer, date_submitted, hash) \
+            VALUES (?,?,?,?,?)`,
+        [user_id, questionId, answerId, date_submitted, hash],
         function (err) {
           if (err) reject(err);
           resolve(this.lastID);

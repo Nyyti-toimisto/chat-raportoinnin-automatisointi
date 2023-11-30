@@ -29,6 +29,7 @@ export type FeedbackPostEntry = {
   question: string;
   answer: string;
   date_submitted: string;
+  audience_id: string;
 };
 
 export type FeedbackAnswerRecord = {

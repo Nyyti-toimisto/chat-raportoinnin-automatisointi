@@ -52,7 +52,7 @@ export class WriteController {
       }
       else{
         for (const [question, answer] of Object.entries(feedback.audience_metadata.pre_answers)) {
-          await this.addPostFeedBackRecord(question, answer, epochToISO(feedback.audience_metadata.complete_time ?? 0)).catch((err) => {
+          await this.addPostFeedBackRecord(question, answer, epochToISO(feedback.audience_metadata.complete_time ?? 0), feedback.audience_id).catch((err) => {
             this.feedBackPostTable.log(err, true);
           })
         }
@@ -85,14 +85,15 @@ export class WriteController {
 
   }
 
-  async addPostFeedBackRecord(question: string, answer: string, date:string) {
+  async addPostFeedBackRecord(question: string, answer: string, date:string, audience_id:string) {
 
     return this.feedBackPostTable
       .insert({
         user_id: 'dummy_id',
         question: question,
         answer: answer,
-        date_submitted: date
+        date_submitted: date,
+        audience_id: audience_id
       })
       .catch((err) => {
         if (String(err).includes('UNIQUE constraint failed')) {
