@@ -40,7 +40,7 @@ function OpenFeedback(props: DateProps) {
     setTimeout(() => {
       setLoading(false);
     }, 200);
-  }, []);
+  }, [props]);
 
   if (error) {
     return <div>Virhe</div>;
