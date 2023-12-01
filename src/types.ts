@@ -44,25 +44,20 @@ export type FeedbackQuestionRecord = {
   question: string;
 };
 
-export type LogSummaryBaseStats = {
-  session_count: number;
+export type LogSummaryPreStats = {
   total_participants: number;
   pre_feedback_count: number;
-  post_feedback_count: number;
+  latest_pre_feedback: string;
+  oldest_pre_feedback: string;
 };
-export type OldestOrNewestRecord = {
-  chat_date: string;
-  hosts: string;
-} & LogSummaryBaseStats;
 
-export type LogSummaryRecord = {
-  oldest: OldestOrNewestRecord;
-  newest: OldestOrNewestRecord;
-  session_count: number;
-  total_participants: number;
-  pre_feedback_count: number;
+export type LogSummaryPostStats = {
   post_feedback_count: number;
+  latest_post_feedback: string;
+  oldest_post_feedback: string;
 };
+
+export type LogSummaryRecord = LogSummaryPreStats & LogSummaryPostStats;
 
 export type PreFeedBackRecord = {
   id: number;

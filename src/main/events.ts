@@ -26,7 +26,7 @@ export const registerHandles = () => {
   });
 
   ipcMain.handle('log_summary', () => {
-    return false
+    return testReader.getLogPageSummary();
   })
 
   ipcMain.handle('newlog_load_state', async (_, credentials) => {

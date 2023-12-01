@@ -19,8 +19,10 @@ function LogSummary() {
       window.logAPI
         .logSummary()
         .then((d) => {
+          if(d.pre_feedback_count === 0) {
+            return;
+          }
           setRecords(d);
-          
         })
         .catch((err) => {
           setError(err.message);
@@ -38,18 +40,18 @@ function LogSummary() {
     return (
       <>
         <div className={styles.headerBar}>
-          <InfoBoxS title="Lokeja" value={records.session_count} />
           <InfoBoxS title="Osallistujia" value={records.total_participants} />
+          <InfoBoxS title="Etupalautteita" value={records.pre_feedback_count} />
           <InfoBoxS
-            title="Palautteita"
-            value={records.post_feedback_count + records.pre_feedback_count}
+            title="Jälkipalautteita"
+            value={records.post_feedback_count}
           />
         </div>
         <AnimatedHorizLine />
         <div className={styles.footer}>
-          <TableComponent props={records.newest} />
+          <TableComponent date={records.latest_post_feedback > records.latest_pre_feedback? records.latest_post_feedback : records.latest_pre_feedback} />
           <TableDivider />
-          <TableComponent props={records.oldest} />
+          <TableComponent date={records.oldest_post_feedback < records.oldest_pre_feedback? records.oldest_post_feedback : records.oldest_pre_feedback} />
         </div>
       </>
     );

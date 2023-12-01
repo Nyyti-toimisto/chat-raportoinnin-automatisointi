@@ -4,8 +4,8 @@ import {
   PostFeedBackQuestionSummary,
   PreFeedBackRecord,
   PreFeedBackStatsSummary,
-  LogSummaryBaseStats,
-  OldestOrNewestRecord
+  LogSummaryPreStats,
+  LogSummaryPostStats
 } from '../../../types';
 import { Dao } from '../dao';
 import { DateRangePipeProp } from '../../../main/events';
@@ -191,33 +191,42 @@ export class ReadController {
   // Adjust types LogSummaryBaseStats and OldestOrNewestRecord as needed
   async getLogPageSummary() {
 
-    const numbers: LogSummaryBaseStats = await new Promise((resolve, reject) => {
+    const preStat: LogSummaryPreStats = await new Promise((resolve, reject) => {
       this.dao.db.get(
-        ``,
+        `SELECT
+          COUNT(DISTINCT user_id) as total_participants,
+          COUNT(id) as pre_feedback_count,
+          MAX(date_submitted) as latest_pre_feedback,
+          MIN(date_submitted) as oldest_pre_feedback
+        FROM feedback_pre
+      `,
         (err, row) => {
           if (err) reject(err);
-          if (row) resolve(row as LogSummaryBaseStats);
+          if (row) resolve(row as LogSummaryPreStats);
           else reject('No rows returned on log page summary');
         }
       );
     });
-
-    const otherRecords = async (whichOne: 'ASC' | 'DESC'): Promise<OldestOrNewestRecord> => {
-      return await new Promise((resolve, reject) => {
+    const postStat: LogSummaryPostStats = await new Promise((resolve, reject) => {
         this.dao.db.get(
-          ``,
+          `
+          SELECT
+            COUNT(DISTINCT date_submitted) as post_feedback_count,
+            MAX(date_submitted) as latest_post_feedback,
+            MIN(date_submitted) as oldest_post_feedback
+          FROM feedback_post
+          `,
           (err, row) => {
             if (err) reject(err);
-            if (row) resolve(row as OldestOrNewestRecord);
+            if (row) resolve(row as LogSummaryPostStats);
             else reject('No rows returned on log page summary');
           }
         );
       });
-    };
+
     return {
-      ...numbers,
-      oldest: await otherRecords('ASC').then((record) => record),
-      newest: await otherRecords('DESC').then((record) => record)
+      ...preStat,
+      ...postStat
     };
   }
 
