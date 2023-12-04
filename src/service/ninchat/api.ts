@@ -34,18 +34,17 @@ export const fetchQueue = (credentials: Credentials, beginDate: string) => {
         });
 };
 
-const fetchSingeFeedback = (credentials: Credentials, audience_id: string, time:number) => {
-
+const fetchSingeFeedback = (credentials: Credentials, audience_id: string, time: number) => {
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            caller_type: "email",
+            caller_type: 'email',
             caller_name: credentials.username,
             caller_auth: credentials.password,
-            action: "get_transcript",
+            action: 'get_transcript',
             audience_id: audience_id,
             stats_length: 1000,
             interval_begin: 0
@@ -64,27 +63,24 @@ const fetchSingeFeedback = (credentials: Credentials, audience_id: string, time:
             if (res['error_type'] === 'access_denied') {
                 throw { status: 403, statusText: 'access_denied' };
             }
-            (res as NinSingeFeedback).audience_metadata.complete_time = time
-            return (res as NinSingeFeedback);
+            (res as NinSingeFeedback).audience_metadata.complete_time = time;
+            return res as NinSingeFeedback;
         });
-
-}
+};
 
 export const fetchFeedbacks = async (credentials: Credentials, queue: StateMemory['rawQueue']) => {
-    console.log('fetching feedbacks')
+    console.log('fetching feedbacks');
     if (!queue) {
-        console.log('no queue')
-        return null
+        console.log('no queue');
+        return null;
     }
 
-    const results: Promise<NinSingeFeedback>[]= []
+    const results: Promise<NinSingeFeedback>[] = [];
 
     for (const feedback of queue) {
-        results.push(fetchSingeFeedback(credentials, feedback.audience_id, feedback.complete_time))
+        results.push(fetchSingeFeedback(credentials, feedback.audience_id, feedback.complete_time));
     }
-    const res = await Promise.all(results)
+    const res = await Promise.all(results);
 
-    return res
-
-
-}
+    return res;
+};

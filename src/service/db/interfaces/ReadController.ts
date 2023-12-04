@@ -1,72 +1,73 @@
 import moment from 'moment';
 import {
-  PostFeedBackRecord,
-  PostFeedBackQuestionSummary,
-  PreFeedBackRecord,
-  PreFeedBackStatsSummary,
-  LogSummaryPreStats,
-  LogSummaryPostStats
+    PostFeedBackRecord,
+    PostFeedBackQuestionSummary,
+    PreFeedBackRecord,
+    PreFeedBackStatsSummary,
+    LogSummaryPreStats,
+    LogSummaryPostStats
 } from '../../../types';
 import { Dao } from '../dao';
 import { DateRangePipeProp } from '../../../main/events';
 import { edgeDate, groupAndCountAnswers, groupQuestions } from '../../util';
 
 export class ReadController {
-  dao: Dao;
-  constructor(dao: Dao) {
-    this.dao = dao;
-  }
+    dao: Dao;
+    constructor(dao: Dao) {
+        this.dao = dao;
+    }
 
-  async getLatestFeedBackTimestamp(): Promise<string> {
-    return await new Promise((resolve, reject) => {
-      this.dao.db.all(`
+    async getLatestFeedBackTimestamp(): Promise<string> {
+        return await new Promise((resolve, reject) => {
+            this.dao.db.all(
+                `
       SELECT MAX(date_submitted) AS latest FROM
       (
         SELECT date_submitted FROM feedback_post
         UNION
         SELECT date_submitted FROM feedback_pre
       )
-      `, (err, rows) => {
-        if (err) reject(err);
-        if (rows) {
-          const r = rows as { latest: string }[];
-          resolve(r[0].latest);
-        }
-        else reject('No rows returned on dates set');
-      });
-    });
+      `,
+                (err, rows) => {
+                    if (err) reject(err);
+                    if (rows) {
+                        const r = rows as { latest: string }[];
+                        resolve(r[0].latest);
+                    } else reject('No rows returned on dates set');
+                }
+            );
+        });
+    }
 
-  }
+    async getDateBarHighlights(): Promise<string[]> {
+        const raw: string[] = await new Promise((resolve, reject) => {
+            this.dao.db.all(`SELECT date_submitted FROM feedback_pre`, (err, rows) => {
+                if (err) reject(err);
+                if (rows) {
+                    const mappedRows = (rows as { date_submitted: string }[]).map((row) =>
+                        moment(row.date_submitted).format('YYYY-MM-DD')
+                    );
+                    resolve(Array.from(new Set(mappedRows)));
+                } else reject('No rows returned on dates set');
+            });
+        });
+        return raw;
+    }
 
-  async getDateBarHighlights(): Promise<string[]> {
-    const raw: string[] = await new Promise((resolve, reject) => {
-      this.dao.db.all(`SELECT date_submitted FROM feedback_pre`, (err, rows) => {
-        if (err) reject(err);
-        if (rows) {
-          const mappedRows = (rows as { date_submitted: string }[]).map((row) =>
-            moment(row.date_submitted).format('YYYY-MM-DD')
-          );
-          resolve(Array.from(new Set(mappedRows)));
-        } else reject('No rows returned on dates set');
-      });
-    });
-    return raw;
-  }
+    async getPostFeedback(
+        dates: DateRangePipeProp,
+        closed = false
+    ): Promise<PostFeedBackQuestionSummary[]> {
+        const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
+        const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
 
-  async getPostFeedback(
-    dates: DateRangePipeProp,
-    closed = false
-  ): Promise<PostFeedBackQuestionSummary[]> {
-    const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
-    const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
+        const closedOrOpenFeedbacks = closed ? 'NOT' : '';
 
-    const closedOrOpenFeedbacks = closed ? 'NOT' : '';
-
-    //TODO: have tablenames be dynamic as is with other queries
-    //TODO: separate the two, querying db and processing the data
-    const raw: PostFeedBackRecord[] = await new Promise((resolve, reject) => {
-      this.dao.db.all(
-        `
+        //TODO: have tablenames be dynamic as is with other queries
+        //TODO: separate the two, querying db and processing the data
+        const raw: PostFeedBackRecord[] = await new Promise((resolve, reject) => {
+            this.dao.db.all(
+                `
         WITH fp_post AS (
           SELECT
               fp.id,
@@ -100,27 +101,27 @@ export class ReadController {
             GROUP BY answer
             HAVING COUNT(*) = 1)
         `,
-        (err, rows) => {
-          if (err) reject(err);
-          if (rows) resolve(rows as PostFeedBackRecord[]);
-          else reject('No rows returned on post feedback question set');
-        }
-      );
-    });
+                (err, rows) => {
+                    if (err) reject(err);
+                    if (rows) resolve(rows as PostFeedBackRecord[]);
+                    else reject('No rows returned on post feedback question set');
+                }
+            );
+        });
 
-    const processed = groupAndCountAnswers(groupQuestions(raw));
+        const processed = groupAndCountAnswers(groupQuestions(raw));
 
-    return processed;
-  }
+        return processed;
+    }
 
-  //TODO: separate the two, querying db and processing the data
-  async getPreFeedbackStats(dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary | null> {
-    const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
-    const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
+    //TODO: separate the two, querying db and processing the data
+    async getPreFeedbackStats(dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary | null> {
+        const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
+        const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
 
-    const raw: PreFeedBackRecord[] = await new Promise((resolve, reject) => {
-      this.dao.db.all(
-        `
+        const raw: PreFeedBackRecord[] = await new Promise((resolve, reject) => {
+            this.dao.db.all(
+                `
                 SELECT id, date_submitted, feeling, gender, age
                 FROM feedback_pre
                 WHERE 
@@ -128,106 +129,103 @@ export class ReadController {
                         AND 
                         date_submitted <= '${end}'
             `,
-        (err, rows) => {
-          if (err) reject(err);
-          if (rows) resolve(rows as PreFeedBackRecord[]);
-          else reject(null);
-        }
-      );
-    });
+                (err, rows) => {
+                    if (err) reject(err);
+                    if (rows) resolve(rows as PreFeedBackRecord[]);
+                    else reject(null);
+                }
+            );
+        });
 
-    if (raw.length === 0) return null
+        if (raw.length === 0) return null;
 
-    const stats: PreFeedBackStatsSummary = {
-      range: {
-        start: edgeDate(raw, 'min'),
-        end: edgeDate(raw, 'max')
-      },
-      feels: {
-        positive: raw.filter((record) => record.feeling === 'Positiivinen').length,
-        negative: raw.filter((record) => record.feeling === 'Negatiivinen').length,
-        neutral: raw.filter((record) => record.feeling === 'Neutraali').length
-      },
-      age: {
-        '18-24': raw.filter((record) => record.age === '18-24').length,
-        '25-29': raw.filter((record) => record.age === '25-29').length,
-        '30-35': raw.filter((record) => record.age === '30-35').length,
-        '36-46': raw.filter((record) => record.age === '36-46').length,
-        'Ei sano': raw.filter((record) => record.age === 'Ei halua kertoa').length
-      },
-      gender: {
-        male: raw.filter((record) => record.gender === 'Mies').length,
-        female: raw.filter((record) => record.gender === 'Nainen').length,
-        other: raw.filter((record) => record.gender === 'Muu').length,
-        unknow: raw.filter((record) => record.gender === 'En halua sanoa').length
-      },
-      chart: {
-        // TODO: to improve performance if needed,
-        // instead of mapping each feeling with its week and year,
-        // thus sending large amounts of records,
-        // map instructions to the front end how to assemble this data
-        // itself. This way size of the array is limited
-        // to number of weeks in the date range rather than number of
-        // feedbacks.
-        feel: raw.map((record) => {
-          return {
-            week: moment(record.date_submitted, 'YYYY-MM-DD').isoWeek(),
-            year: moment(record.date_submitted, 'YYYY-MM-DD').year(),
-            feeling: record.feeling,
-            id: record.id
-          };
-        })
-      }
-    };
+        const stats: PreFeedBackStatsSummary = {
+            range: {
+                start: edgeDate(raw, 'min'),
+                end: edgeDate(raw, 'max')
+            },
+            feels: {
+                positive: raw.filter((record) => record.feeling === 'Positiivinen').length,
+                negative: raw.filter((record) => record.feeling === 'Negatiivinen').length,
+                neutral: raw.filter((record) => record.feeling === 'Neutraali').length
+            },
+            age: {
+                '18-24': raw.filter((record) => record.age === '18-24').length,
+                '25-29': raw.filter((record) => record.age === '25-29').length,
+                '30-35': raw.filter((record) => record.age === '30-35').length,
+                '36-46': raw.filter((record) => record.age === '36-46').length,
+                'Ei sano': raw.filter((record) => record.age === 'Ei halua kertoa').length
+            },
+            gender: {
+                male: raw.filter((record) => record.gender === 'Mies').length,
+                female: raw.filter((record) => record.gender === 'Nainen').length,
+                other: raw.filter((record) => record.gender === 'Muu').length,
+                unknow: raw.filter((record) => record.gender === 'En halua sanoa').length
+            },
+            chart: {
+                // TODO: to improve performance if needed,
+                // instead of mapping each feeling with its week and year,
+                // thus sending large amounts of records,
+                // map instructions to the front end how to assemble this data
+                // itself. This way size of the array is limited
+                // to number of weeks in the date range rather than number of
+                // feedbacks.
+                feel: raw.map((record) => {
+                    return {
+                        week: moment(record.date_submitted, 'YYYY-MM-DD').isoWeek(),
+                        year: moment(record.date_submitted, 'YYYY-MM-DD').year(),
+                        feeling: record.feeling,
+                        id: record.id
+                    };
+                })
+            }
+        };
 
-    return stats;
-  }
+        return stats;
+    }
 
-
-  // TODO: nothing calls this yet. Should return statistics about pre and post
-  // feedbacks.
-  // Newest - oldest date
-  // How many days in total, participants (from pre_feedbacks)
-  // Adjust types LogSummaryBaseStats and OldestOrNewestRecord as needed
-  async getLogPageSummary() {
-
-    const preStat: LogSummaryPreStats = await new Promise((resolve, reject) => {
-      this.dao.db.get(
-        `SELECT
+    // TODO: nothing calls this yet. Should return statistics about pre and post
+    // feedbacks.
+    // Newest - oldest date
+    // How many days in total, participants (from pre_feedbacks)
+    // Adjust types LogSummaryBaseStats and OldestOrNewestRecord as needed
+    async getLogPageSummary() {
+        const preStat: LogSummaryPreStats = await new Promise((resolve, reject) => {
+            this.dao.db.get(
+                `SELECT
           COUNT(DISTINCT user_id) as total_participants,
           COUNT(id) as pre_feedback_count,
           MAX(date_submitted) as latest_pre_feedback,
           MIN(date_submitted) as oldest_pre_feedback
         FROM feedback_pre
       `,
-        (err, row) => {
-          if (err) reject(err);
-          if (row) resolve(row as LogSummaryPreStats);
-          else reject('No rows returned on log page summary');
-        }
-      );
-    });
-    const postStat: LogSummaryPostStats = await new Promise((resolve, reject) => {
-        this.dao.db.get(
-          `
+                (err, row) => {
+                    if (err) reject(err);
+                    if (row) resolve(row as LogSummaryPreStats);
+                    else reject('No rows returned on log page summary');
+                }
+            );
+        });
+        const postStat: LogSummaryPostStats = await new Promise((resolve, reject) => {
+            this.dao.db.get(
+                `
           SELECT
             COUNT(DISTINCT date_submitted) as post_feedback_count,
             MAX(date_submitted) as latest_post_feedback,
             MIN(date_submitted) as oldest_post_feedback
           FROM feedback_post
           `,
-          (err, row) => {
-            if (err) reject(err);
-            if (row) resolve(row as LogSummaryPostStats);
-            else reject('No rows returned on log page summary');
-          }
-        );
-      });
+                (err, row) => {
+                    if (err) reject(err);
+                    if (row) resolve(row as LogSummaryPostStats);
+                    else reject('No rows returned on log page summary');
+                }
+            );
+        });
 
-    return {
-      ...preStat,
-      ...postStat
-    };
-  }
-
+        return {
+            ...preStat,
+            ...postStat
+        };
+    }
 }

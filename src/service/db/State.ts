@@ -7,7 +7,6 @@ export class StateMemory {
     private feedBacks: NinSingeFeedback[] | null;
     private userCount: number; // usercount is calculated from feedbacks which contain exactly 3 questions
 
-
     constructor() {
         this.rawQueue = null;
         this.userCount = 0;
@@ -31,12 +30,12 @@ export class StateMemory {
             return;
         }
         this.feedBacks = await fetchFeedbacks(credentials, this.rawQueue);
-        this.userCount = this.feedBacks ?
-            (this.feedBacks
-                .map(row => Object.keys(row.audience_metadata.pre_answers).length === 3).filter(Boolean).length)
-            : 0
+        this.userCount = this.feedBacks
+            ? this.feedBacks
+                  .map((row) => Object.keys(row.audience_metadata.pre_answers).length === 3)
+                  .filter(Boolean).length
+            : 0;
     }
-
 
     getFeedbackMeta() {
         if (!this.rawQueue) {
@@ -45,16 +44,8 @@ export class StateMemory {
         return {
             count: this.rawQueue.length,
             dates: {
-                min: epochToISO(
-                    Math.min(
-                        ...this.rawQueue.map((element) => element.complete_time)
-                    )
-                ),
-                max: epochToISO(
-                    Math.max(
-                        ...this.rawQueue.map((element) => element.complete_time)
-                    )
-                )
+                min: epochToISO(Math.min(...this.rawQueue.map((element) => element.complete_time))),
+                max: epochToISO(Math.max(...this.rawQueue.map((element) => element.complete_time)))
             },
             userCount: this.userCount
         };

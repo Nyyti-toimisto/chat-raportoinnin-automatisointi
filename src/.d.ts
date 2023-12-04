@@ -1,1 +1,1 @@
-declare module '*.png?asset'
+declare module '*.png?asset';

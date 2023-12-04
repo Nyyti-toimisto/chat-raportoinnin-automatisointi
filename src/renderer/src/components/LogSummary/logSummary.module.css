@@ -1,36 +1,36 @@
 .logSummary__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
 }
 
 .title {
-  align-self: flex-start;
-  margin-bottom: 4rem;
+    align-self: flex-start;
+    margin-bottom: 4rem;
 }
 
 .content {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  height: 20rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 20rem;
 }
 
 .headerBar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  gap: 5rem;
-  height: 70px;
-  width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 5rem;
+    height: 70px;
+    width: 300px;
 }
 
 .footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  gap: 16rem;
-  margin-top: 2rem;
-  position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 16rem;
+    margin-top: 2rem;
+    position: relative;
 }

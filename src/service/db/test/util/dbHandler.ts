@@ -1,20 +1,18 @@
-import { Dao } from "../../dao";
-import { existsSync, unlink } from "fs";
-import path from "path";
+import { Dao } from '../../dao';
+import { existsSync, unlink } from 'fs';
+import path from 'path';
 
 export default class DbHandler {
-
     dao: Dao;
     filepath: string;
 
     constructor(filepath: string, tableLogger: (tableName: string, message: string) => void) {
         this.filepath = path.join(__dirname, filepath);
         this.dao = new Dao(this.filepath, tableLogger);
-
     }
 
     dbExists() {
-        return existsSync(this.filepath)
+        return existsSync(this.filepath);
     }
 
     removeDbFile() {
@@ -22,13 +20,11 @@ export default class DbHandler {
             setTimeout(() => {
                 unlink(this.filepath, function (err) {
                     if (err) rej(err);
-                    res()
+                    res();
                 });
             }, 200);
-            
-        })
+        });
     }
-
 
     closeDb() {
         return new Promise<boolean>((resolve) => {
@@ -47,9 +43,8 @@ export default class DbHandler {
                 if (err) {
                     reject(err.message);
                 }
-                resolve((row as {[key:string]:number})['COUNT(*)']);
+                resolve((row as { [key: string]: number })['COUNT(*)']);
             });
         });
     }
-
 }

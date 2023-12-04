@@ -5,12 +5,12 @@
  **************************************************/
 
 svg .svg-elem-1 {
-  stroke-dashoffset: 481px;
-  stroke-dasharray: 481px;
-  -webkit-transition: stroke-dashoffset 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s;
-  transition: stroke-dashoffset 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s;
+    stroke-dashoffset: 481px;
+    stroke-dasharray: 481px;
+    -webkit-transition: stroke-dashoffset 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s;
+    transition: stroke-dashoffset 1s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0s;
 }
 
 svg.active .svg-elem-1 {
-  stroke-dashoffset: 962px;
+    stroke-dashoffset: 962px;
 }
