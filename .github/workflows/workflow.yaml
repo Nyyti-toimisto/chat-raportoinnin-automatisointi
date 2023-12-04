@@ -1,0 +1,57 @@
+name: Pull request pipeline
+
+on:
+    push:
+        branches: ['main']
+    pull_request:
+        branches: ['main']
+
+    workflow_dispatch:
+
+jobs:
+    test:
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Test
+              run: |
+                  npm ci
+                  npm run test
+    typecheck:
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Typecheck node and web
+              run: |
+                  npm ci
+                  npm run typecheck
+    lint:
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Lint
+              run: |
+                  npm ci
+                  npm run lint
+    format:
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Check formatting
+              run: |
+                  npm ci
+                  npm run format:check
+
+    build-linux:
+        timeout-minutes: 10
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Run build for linux
+              run: |
+                  npm ci
+                  npm run build:linux

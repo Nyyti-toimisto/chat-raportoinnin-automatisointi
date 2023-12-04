@@ -1,30 +1,30 @@
 .container {
-  max-height: 12rem;
-  aspect-ratio: 20/12;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 15px;
-  padding: 1rem;
-  gap: 1rem;
+    max-height: 12rem;
+    aspect-ratio: 20/12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+    padding: 1rem;
+    gap: 1rem;
 }
 
 .body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70%;
-  width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    width: 100%;
 }
 
 @media screen and (max-width: 1000px) {
-  .container {
-    max-height: 20rem;
-    aspect-ratio: 12/20;
-  }
+    .container {
+        max-height: 20rem;
+        aspect-ratio: 12/20;
+    }
 
-  .body {
-    flex-direction: column;
-  }
+    .body {
+        flex-direction: column;
+    }
 }

@@ -1,16 +1,16 @@
 .customTable th {
-  font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: 0.04375rem;
-  text-align: left;
-  padding: 0.5rem 0.5rem;
-  width: 100px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.04375rem;
+    text-align: left;
+    padding: 0.5rem 0.5rem;
+    width: 100px;
 }
 
 .customTable td {
-  font-size: 1.3rem;
-  font-weight: 400;
-  letter-spacing: 0.04375rem;
-  text-align: left;
-  padding: 0.5rem 0.5rem;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.04375rem;
+    text-align: left;
+    padding: 0.5rem 0.5rem;
 }

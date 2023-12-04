@@ -1,19 +1,15 @@
 {
-  "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": [
-    "electron.vite.config.*",
-    "src/main/*",
-    "src/preload/*",
-    "src/service/*",
-    "src/types.ts",
-  ],
-  "compilerOptions": {
-    "composite": false,
-    "baseUrl": ".",
-    "types": [
-      "electron-vite/node",
-      "@types/jest",
-      "@types/node",
-    ]
-  }
+    "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
+    "include": [
+        "electron.vite.config.*",
+        "src/main/*",
+        "src/preload/*",
+        "src/service/*",
+        "src/types.ts"
+    ],
+    "compilerOptions": {
+        "composite": false,
+        "baseUrl": ".",
+        "types": ["electron-vite/node", "@types/jest", "@types/node"]
+    }
 }

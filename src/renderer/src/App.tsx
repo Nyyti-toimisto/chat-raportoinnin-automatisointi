@@ -7,19 +7,19 @@ import Settings from './views/Settings/Settings';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
-  return (
-    <HashRouter>
-      <NavBar />
-      <div className="content">
-        <Routes>
-          <Route path="/" element={<Summary />} />
-          <Route path="/log" element={<Log />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </div>
-    </HashRouter>
-  );
+    return (
+        <HashRouter>
+            <NavBar />
+            <div className="content">
+                <Routes>
+                    <Route path="/" element={<Summary />} />
+                    <Route path="/log" element={<Log />} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/settings" element={<Settings />} />
+                </Routes>
+            </div>
+        </HashRouter>
+    );
 }
 
 export default App;
