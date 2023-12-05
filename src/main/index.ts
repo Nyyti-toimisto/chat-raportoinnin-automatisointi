@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow } from 'electron';
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron';
 import path, { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
@@ -7,13 +7,13 @@ import { Dao, createTables, daoLogger } from '../service/db/dao';
 import { WriteController } from '../service/db/interfaces/WriteController';
 import { ReadController } from '../service/db/interfaces/ReadController';
 
-export const filepath = path.join(__dirname, './nyytiDb.db');
-export const dao = new Dao(filepath, daoLogger);
+export let filepath = path.join(__dirname, './nyytiDb.db');
+export let dao = new Dao(filepath, daoLogger);
 
 export const { feedbackPreTable, feedbackPostTable } = createTables(dao);
 
-export const testWriter = new WriteController(feedbackPreTable, feedbackPostTable);
-export const testReader = new ReadController(dao);
+export let testWriter = new WriteController(feedbackPreTable, feedbackPostTable);
+export let testReader = new ReadController(dao);
 
 registerHandles();
 
@@ -59,6 +59,31 @@ app.whenReady().then(() => {
     // Set app user model id for windows
     electronApp.setAppUserModelId('com.electron');
 
+    ipcMain.handle('dialog:openFile', async () => {
+        const { canceled, filePaths } = await dialog.showOpenDialog({
+            filters: [{ name: 'Database', extensions: ['.db'] }],
+            properties: ['openFile']
+        });
+        if (canceled || filePaths[0] === filepath) {
+            return false;
+        }
+        // close db
+        if (filePaths.length === 1) {
+            dao.db.close((err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        }
+        // open new db
+        filepath = filePaths[0];
+        dao = new Dao(filePaths[0], daoLogger);
+        const { feedbackPreTable, feedbackPostTable } = createTables(dao);
+
+        testWriter = new WriteController(feedbackPreTable, feedbackPostTable);
+        testReader = new ReadController(dao);
+        return true;
+    });
     // Default open or close DevTools by F12 in development
     // and ignore CommandOrControl + R in production.
     // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils

@@ -1,0 +1,31 @@
+.box {
+    background-color: lightgray;
+    height: 100px;
+    padding: 1rem;
+    margin-top: 2rem;
+    border-radius: 1rem;
+}
+
+.box p {
+    margin-top: 1.5rem;
+}
+
+.box div {
+    background-color: white !important;
+    border-radius: 1rem;
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    align-items: center;
+}
+
+.box span {
+    font-size: 12px;
+}
+
+.box div > button {
+    background-color: lightgray;
+    height: 15px;
+    width: 75px;
+}

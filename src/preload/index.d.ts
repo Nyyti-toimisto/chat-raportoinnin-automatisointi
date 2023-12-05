@@ -15,6 +15,7 @@ declare global {
         electron: ElectronAPI;
         dateBarAPI: {
             dateBarHighlights: () => Promise<string[]>;
+            changeDb: () => Promise<void>;
         };
         logAPI: {
             logSummary: () => Promise<LogSummaryRecord>;
@@ -29,6 +30,10 @@ declare global {
                 dates: DateRangePipeProp,
                 closed: boolean
             ) => Promise<PostFeedBackQuestionSummary[]>;
+        };
+        fileAPI: {
+            changeDb: () => Promise<boolean>;
+            getDbLocation: () => Promise<string>;
         };
     }
 }
