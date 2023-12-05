@@ -32,6 +32,11 @@ const summaryPageAPI = {
         ipcRenderer.invoke('summary_postFeedbackClosed', dates, closed)
 };
 
+const fileAPI = {
+    changeDb: (): Promise<boolean> => ipcRenderer.invoke('dialog:openFile'),
+    getDbLocation: (): Promise<string> => ipcRenderer.invoke('get_db_location')
+};
+
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
@@ -43,6 +48,7 @@ if (process.contextIsolated) {
         contextBridge.exposeInMainWorld('logAPI', logPageAPI);
         contextBridge.exposeInMainWorld('summaryAPI', summaryPageAPI);
         contextBridge.exposeInMainWorld('dateBarAPI', dateBarAPI);
+        contextBridge.exposeInMainWorld('fileAPI', fileAPI);
     } catch (error) {
         console.error(error);
     }
@@ -55,4 +61,6 @@ if (process.contextIsolated) {
     window.dateBarAPI = dateBarAPI;
     // @ts-ignore (define in dts)
     window.electron = electronAPI;
+    // @ts-ignore (define in dts)
+    window.fileAPI = fileAPI;
 }

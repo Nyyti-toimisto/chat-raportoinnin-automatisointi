@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { testReader, testWriter } from '.';
+import { testReader, testWriter, filepath } from '.';
 
 // ipcMain listeners are defined in preload. They need to be invoked before they can be handled.
 // This is a security feature of Electron.
@@ -35,5 +35,9 @@ export const registerHandles = () => {
 
     ipcMain.handle('newlog_process_state', () => {
         return testWriter.processState();
+    });
+
+    ipcMain.handle('get_db_location', () => {
+        return filepath;
     });
 };
