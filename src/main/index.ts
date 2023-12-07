@@ -1,5 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron';
-import path, { join } from 'path';
+import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 import { registerHandles } from './events';
@@ -7,13 +7,10 @@ import { Dao, createTables, daoLogger } from '../service/db/dao';
 import { WriteController } from '../service/db/interfaces/WriteController';
 import { ReadController } from '../service/db/interfaces/ReadController';
 
-export let filepath = path.join(__dirname, './nyytiDb.db');
-export let dao = new Dao(filepath, daoLogger);
-
-export const { feedbackPreTable, feedbackPostTable } = createTables(dao);
-
-export let testWriter = new WriteController(feedbackPreTable, feedbackPostTable);
-export let testReader = new ReadController(dao);
+export let filepath = '';
+export let dao: Dao;
+export let testWriter: WriteController;
+export let testReader: ReadController;
 
 registerHandles();
 
@@ -68,7 +65,7 @@ app.whenReady().then(() => {
             return false;
         }
         // close db
-        if (filePaths.length === 1) {
+        if (filePaths.length === 1 && dao) {
             dao.db.close((err) => {
                 if (err) {
                     console.log(err);
