@@ -58,7 +58,7 @@ app.whenReady().then(() => {
 
     ipcMain.handle('dialog:openFile', async () => {
         const { canceled, filePaths } = await dialog.showOpenDialog({
-            filters: [{ name: 'Database', extensions: ['db',] }],
+            filters: [{ name: 'Database', extensions: ['db'] }],
             properties: ['openFile']
         });
         if (canceled || filePaths[0] === filepath) {
