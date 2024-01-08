@@ -14,7 +14,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: Test
+              name: Test
               run: |
                   npm ci
                   npm run test
@@ -23,7 +23,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: Typecheck node and web
+              name: Typecheck node and web
               run: |
                   npm ci
                   npm run typecheck
@@ -32,7 +32,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: Lint
+              name: Lint
               run: |
                   npm ci
                   npm run lint
@@ -41,7 +41,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: Check formatting
+              name: Check formatting
               run: |
                   npm ci
                   npm run format:check
@@ -51,9 +51,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: Run build for linux
-              run: |
+              name: Run build for linux
+                run: |
                   npm ci
                   npm run build:linux
-        with:
-            GH_TOKEN: ${{ secrets.github_token }}
+                with:
+                  GH_TOKEN: ${{ secrets.github_token }}
+            
