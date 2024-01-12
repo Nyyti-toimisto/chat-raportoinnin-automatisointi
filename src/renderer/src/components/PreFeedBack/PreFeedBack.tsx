@@ -25,7 +25,6 @@ function PreFeedBack(props: DateProps) {
                     setError('No data');
                     return;
                 }
-                console.log(d);
                 setpreRecords(d);
             })
             .catch((err) => {
