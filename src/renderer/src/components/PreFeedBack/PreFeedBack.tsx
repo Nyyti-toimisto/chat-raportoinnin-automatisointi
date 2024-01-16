@@ -25,7 +25,6 @@ function PreFeedBack(props: DateProps) {
                     setError('No data');
                     return;
                 }
-                console.log(d);
                 setpreRecords(d);
             })
             .catch((err) => {
@@ -75,7 +74,11 @@ function PreFeedBack(props: DateProps) {
             </div>
 
             <div className={styles.footer}>
-                {loading ? <p>Loading...</p> : <LineChartContainer props={preRecords.chart} />}
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <LineChartContainer feelData={preRecords.chart} date={props} />
+                )}
             </div>
         </div>
     );

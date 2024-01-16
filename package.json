@@ -17,7 +17,8 @@
         "postinstall": "electron-builder install-app-deps",
         "build:win": "npm run build && electron-builder --win --config",
         "build:mac": "electron-vite build && electron-builder --mac --config",
-        "build:linux": "electron-vite build && electron-builder --linux --config"
+        "build:linux": "electron-vite build && electron-builder --linux --config",
+        "release": "electron-vite build && electron-builder --linux --config"
     },
     "dependencies": {
         "@ant-design/icons": "^5.2.6",
@@ -30,6 +31,7 @@
         "@nivo/line": "^0.83.0",
         "@nivo/pie": "^0.83.0",
         "antd": "^5.10.0",
+        "dayjs": "^1.11.10",
         "md5": "^2.3.0",
         "moment": "^2.29.4",
         "react-modal": "^3.16.1",

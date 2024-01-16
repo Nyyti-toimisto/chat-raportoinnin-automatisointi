@@ -1,6 +1,10 @@
 import { ResponsiveLine } from '@nivo/line';
+import dayjs from 'dayjs';
 import { useState } from 'react';
-import { ChartingData } from 'src/types';
+import { ChartingData, DateProps } from 'src/types';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+
+dayjs.extend(weekOfYear);
 
 const filterByYear = function (arr: Pick<ChartingData, 'feel'>['feel'], year: number) {
     return arr.filter((item) => item.year === year && item.id !== null);
@@ -19,31 +23,35 @@ const uniqueWeeks = function (arr: Pick<ChartingData, 'feel'>['feel']) {
 };
 
 type DataSubset = {
-    x: number;
+    x: Date;
     y: number;
 };
 
-function LineChartContainer({ props }: { props: ChartingData }) {
+function LineChartContainer({ feelData, date }: { feelData: ChartingData; date: DateProps }) {
     const [filterYear] = useState(new Date().getFullYear());
 
-    const filteredData = filterByYear(props.feel, filterYear);
+    let feelingData = feelData.feel;
+    // check if date range is NOT selected and filter data to current year
+    if (!date.dates) {
+        feelingData = filterByYear(feelData.feel, filterYear);
+    }
 
-    const feelings = uniqueFeelings(filteredData);
-    const weeks = uniqueWeeks(filteredData);
+    const feelings = uniqueFeelings(feelingData);
+    const weeks = uniqueWeeks(feelingData);
 
     let data: { id: string; data: DataSubset[] }[] = [];
 
     for (const feeling of feelings) {
-        let feelingsPerWeek: DataSubset[] = [];
+        const feelingsPerWeek: DataSubset[] = [];
 
         for (const week of weeks) {
+            const year = feelingData.find((item) => item.week === week)?.year;
             feelingsPerWeek.push({
-                x: week,
-                y: filteredData.filter((item) => item.feeling === feeling && item.week === week)
+                x: dayjs(`${year}`).week(week).toDate(),
+                y: feelingData.filter((item) => item.feeling === feeling && item.week === week)
                     .length
             });
         }
-        feelingsPerWeek = feelingsPerWeek.sort((a, b) => a.x - b.x);
         data.push({
             id: feeling,
             data: feelingsPerWeek
@@ -51,25 +59,32 @@ function LineChartContainer({ props }: { props: ChartingData }) {
     }
 
     const sentimentWbW: DataSubset[] = [];
+
     for (const week of weeks) {
-        const negatives = filteredData.filter(
+        const year = feelingData.find((item) => item.week === week)?.year;
+        const negatives = feelingData.filter(
             (item) => item.feeling === 'Negatiivinen' && item.week === week
         );
-        const positives = filteredData.filter(
+        const positives = feelingData.filter(
             (item) => item.feeling === 'Positiivinen' && item.week === week
         );
-
-        sentimentWbW.push({
-            x: week,
-            y: positives.length - negatives.length
-        });
+        if (positives.length > 0 || negatives.length > 0) {
+            sentimentWbW.push({
+                x: dayjs(`${year}`).week(week).toDate(),
+                y: positives.length - negatives.length
+            });
+        }
     }
     data.push({
         id: 'Sentimentti',
-        data: sentimentWbW.sort((a, b) => a.x - b.x)
+        data: sentimentWbW
     });
 
     data = data.sort((a, b) => a.id.localeCompare(b.id));
+
+    if (data[0].data.length === 0) {
+        return <p>Ei dataa tälle vuodelle</p>;
+    }
 
     return (
         <>
@@ -87,7 +102,11 @@ function LineChartContainer({ props }: { props: ChartingData }) {
                     }
                 ]}
                 margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-                xScale={{ type: 'point' }}
+                xScale={{
+                    type: 'time',
+                    format: '%d-%m-%Y',
+                    precision: 'day'
+                }}
                 yScale={{
                     type: 'linear',
                     min: 'auto',
@@ -102,7 +121,9 @@ function LineChartContainer({ props }: { props: ChartingData }) {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'viikko',
+                    tickValues: 7,
+                    format: '%d %b %Y',
+                    legend: 'päivämäärä',
                     legendOffset: 36,
                     legendPosition: 'middle'
                 }}
@@ -148,7 +169,9 @@ function LineChartContainer({ props }: { props: ChartingData }) {
                     }
                 ]}
             />
-            <p style={{ position: 'relative', right: '1.8rem' }}>{filterYear}</p>
+            <p style={{ position: 'relative', right: '1.8rem' }}>
+                {date.dates?.[0]?.format('DD/MM/YYYY')} - {date.dates?.[1]?.format('DD/MM/YYYY')}
+            </p>
         </>
     );
 }
