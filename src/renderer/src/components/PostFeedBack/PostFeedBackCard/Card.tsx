@@ -2,14 +2,14 @@ import { PostFeedBackQuestionSummary } from 'src/types';
 import styles from './card.module.css';
 import { Card } from 'antd';
 
-const sortAnswers = function (a: any, b: any) {
+const sortAnswers = function (a, b) {
     const sortValues = {
-        "Täysin samaa mieltä": 0,
-        "Jokseenkin samaa mieltä": 1,
-        "Ei samaa eikä eri mieltä": 2,
-        "Jokseenkin eri mieltä": 3,
-        "Täysin eri mieltä": 4,
-    }
+        'Täysin samaa mieltä': 0,
+        'Jokseenkin samaa mieltä': 1,
+        'Ei samaa eikä eri mieltä': 2,
+        'Jokseenkin eri mieltä': 3,
+        'Täysin eri mieltä': 4
+    };
 
     if (sortValues[a.answer] > sortValues[b.answer]) {
         return 1;
@@ -18,7 +18,7 @@ const sortAnswers = function (a: any, b: any) {
         return -1;
     }
     return 0;
-}
+};
 
 function CardWrapper(props: { data: PostFeedBackQuestionSummary }) {
     const { question, answers } = props.data;
@@ -32,7 +32,9 @@ function CardWrapper(props: { data: PostFeedBackQuestionSummary }) {
             return obj;
         }, {});
 
-    ordered = Object.entries(ordered).map(e => e[1]).sort(sortAnswers);
+    ordered = Object.entries(ordered)
+        .map((e) => e[1])
+        .sort(sortAnswers);
 
     return (
         <div className={styles.container}>
