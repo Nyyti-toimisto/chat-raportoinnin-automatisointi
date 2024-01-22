@@ -84,13 +84,13 @@ export const feedbackMockData = (queues: NinQueue['queue_transcripts']) => {
 
     // Age is used only on 50% of the times
     const age = createEvenlyRepeatedArray(
-        ['18-24', '25-29', '30-35', '36-46', 'ei halua kertoa'],
-        queues.length / 2 / 5
+        ['18-24', '25-29', '30-35', '36-46', 'yli 46', 'ei halua kertoa'],
+        queues.length / 2 / 6
     );
 
     // Gender is used only on 50% of the times
     const gender = createEvenlyRepeatedArray(
-        ['Mies', 'Nainen', 'Muu', 'en halua sanoa'],
+        ['Mies', 'Nainen', 'Muu', 'Ei halua kertoa'],
         queues.length / 2 / 4
     );
 
