@@ -58,8 +58,8 @@ export class ReadController {
         dates: DateRangePipeProp,
         closed = false
     ): Promise<PostFeedBackQuestionSummary[]> {
-        const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
-        const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
+        const start = dates.start ? moment(dates.start).hours(0).minutes(0).seconds(0).format('YYYY-MM-DDTHH:mm:ss') : '2000-01-01';
+        const end = dates.end ? moment(dates.end).hours(23).minutes(59).seconds(59).format('YYYY-MM-DDTHH:mm:ss') : '3000-01-01';
 
         const closedOrOpenFeedbacks = closed ? 'NOT' : '';
 
@@ -116,8 +116,8 @@ export class ReadController {
 
     //TODO: separate the two, querying db and processing the data
     async getPreFeedbackStats(dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary | null> {
-        const start = dates.start ? moment(dates.start).format('YYYY-MM-DD') : '2000-01-01';
-        const end = dates.end ? moment(dates.end).format('YYYY-MM-DD') : '3000-01-01';
+        const start = dates.start ? moment(dates.start).hours(0).minutes(0).seconds(0).format('YYYY-MM-DDTHH:mm:ss') : '2000-01-01';
+        const end = dates.end ? moment(dates.end).hours(23).minutes(59).seconds(59).format('YYYY-MM-DDTHH:mm:ss') : '3000-01-01';
 
         const raw: PreFeedBackRecord[] = await new Promise((resolve, reject) => {
             this.dao.db.all(
@@ -154,13 +154,14 @@ export class ReadController {
                 '25-29': raw.filter((record) => record.age === '25-29').length,
                 '30-35': raw.filter((record) => record.age === '30-35').length,
                 '36-46': raw.filter((record) => record.age === '36-46').length,
+                'yli 46': raw.filter((record) => record.age === 'Yli 46').length,
                 'Ei sano': raw.filter((record) => record.age === 'Ei halua kertoa').length
             },
             gender: {
                 male: raw.filter((record) => record.gender === 'Mies').length,
                 female: raw.filter((record) => record.gender === 'Nainen').length,
                 other: raw.filter((record) => record.gender === 'Muu').length,
-                unknow: raw.filter((record) => record.gender === 'En halua sanoa').length
+                unknow: raw.filter((record) => record.gender === 'Ei halua kertoa').length
             },
             chart: {
                 // TODO: to improve performance if needed,
