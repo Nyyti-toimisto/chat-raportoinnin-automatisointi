@@ -113,19 +113,19 @@ export const feedbackMockData = (queues: NinQueue['queue_transcripts']) => {
                 pre_answers:
                     i % 2 === 0
                         ? {
-                            Fiilis: feeling.shift()!,
-                            Sukupuoli: gender.shift()!,
-                            Ikä: age.shift()!
-                        }
+                              Fiilis: feeling.shift()!,
+                              Sukupuoli: gender.shift()!,
+                              Ikä: age.shift()!
+                          }
                         : {
-                            Fiilis: feeling.shift()!,
-                            'Kokee tunteneensa yhteyttä toisiin': scaleOfFive.shift()!,
-                            'Sai vertaistukea': scaleOfFive.shift()!,
-                            'Kokee erillisyyden tuntemusten vähentyneen': scaleOfFive.shift()!,
-                            'Voimavarat vahvistuivat': scaleOfFive.shift()!,
-                            [sourceOfReference.shift()!]: 'true',
-                            'Miten chat sujui': randomBytes(20).toString('hex')
-                        },
+                              Fiilis: feeling.shift()!,
+                              'Kokee tunteneensa yhteyttä toisiin': scaleOfFive.shift()!,
+                              'Sai vertaistukea': scaleOfFive.shift()!,
+                              'Kokee erillisyyden tuntemusten vähentyneen': scaleOfFive.shift()!,
+                              'Voimavarat vahvistuivat': scaleOfFive.shift()!,
+                              [sourceOfReference.shift()!]: 'true',
+                              'Miten chat sujui': randomBytes(20).toString('hex')
+                          },
                 complete_time: date
             },
             event: 'transcript_contents'
