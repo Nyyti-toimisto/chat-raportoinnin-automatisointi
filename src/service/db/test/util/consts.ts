@@ -84,13 +84,13 @@ export const feedbackMockData = (queues: NinQueue['queue_transcripts']) => {
 
     // Age is used only on 50% of the times
     const age = createEvenlyRepeatedArray(
-        ['18-24', '25-29', '30-35', '36-46', 'ei halua kertoa'],
-        queues.length / 2 / 5
+        ['18-24', '25-29', '30-35', '36-46', 'yli 46', 'ei halua kertoa'],
+        queues.length / 2 / 6
     );
 
     // Gender is used only on 50% of the times
     const gender = createEvenlyRepeatedArray(
-        ['Mies', 'Nainen', 'Muu', 'en halua sanoa'],
+        ['Mies', 'Nainen', 'Muu', 'Ei halua kertoa'],
         queues.length / 2 / 4
     );
 
@@ -113,19 +113,19 @@ export const feedbackMockData = (queues: NinQueue['queue_transcripts']) => {
                 pre_answers:
                     i % 2 === 0
                         ? {
-                              Fiilis: feeling.shift()!,
-                              Sukupuoli: gender.shift()!,
-                              Ikä: age.shift()!
-                          }
+                            Fiilis: feeling.shift()!,
+                            Sukupuoli: gender.shift()!,
+                            Ikä: age.shift()!
+                        }
                         : {
-                              Fiilis: feeling.shift()!,
-                              'Kokee tunteneensa yhteyttä toisiin': scaleOfFive.shift()!,
-                              'Sai vertaistukea': scaleOfFive.shift()!,
-                              'Kokee erillisyyden tuntemusten vähentyneen': scaleOfFive.shift()!,
-                              'Voimavarat vahvistuivat': scaleOfFive.shift()!,
-                              [sourceOfReference.shift()!]: 'true',
-                              'Miten chat sujui': randomBytes(20).toString('hex')
-                          },
+                            Fiilis: feeling.shift()!,
+                            'Kokee tunteneensa yhteyttä toisiin': scaleOfFive.shift()!,
+                            'Sai vertaistukea': scaleOfFive.shift()!,
+                            'Kokee erillisyyden tuntemusten vähentyneen': scaleOfFive.shift()!,
+                            'Voimavarat vahvistuivat': scaleOfFive.shift()!,
+                            [sourceOfReference.shift()!]: 'true',
+                            'Miten chat sujui': randomBytes(20).toString('hex')
+                        },
                 complete_time: date
             },
             event: 'transcript_contents'

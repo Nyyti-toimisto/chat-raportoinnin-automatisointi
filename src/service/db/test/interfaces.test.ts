@@ -155,11 +155,12 @@ describe('Reads and writes to database', () => {
             expect(feedbacks!.feels.positive).toBe(numberOfPrefeedbacks / 3);
             expect(feedbacks!.feels.negative).toBe(numberOfPrefeedbacks / 3);
             expect(feedbacks!.feels.neutral).toBe(numberOfPrefeedbacks / 3);
-            expect(feedbacks!.age['18-24']).toBe(numberOfPrefeedbacks / 5);
-            expect(feedbacks!.age['25-29']).toBe(numberOfPrefeedbacks / 5);
-            expect(feedbacks!.age['30-35']).toBe(numberOfPrefeedbacks / 5);
-            expect(feedbacks!.age['36-46']).toBe(numberOfPrefeedbacks / 5);
-            expect(feedbacks!.age['Ei sano']).toBe(numberOfPrefeedbacks / 5);
+            expect(feedbacks!.age['18-24']).toBe(numberOfPrefeedbacks / 6);
+            expect(feedbacks!.age['25-29']).toBe(numberOfPrefeedbacks / 6);
+            expect(feedbacks!.age['30-35']).toBe(numberOfPrefeedbacks / 6);
+            expect(feedbacks!.age['36-46']).toBe(numberOfPrefeedbacks / 6);
+            expect(feedbacks!.age['yli 46']).toBe(numberOfPrefeedbacks / 6);
+            expect(feedbacks!.age['Ei sano']).toBe(numberOfPrefeedbacks / 6);
             expect(feedbacks!.gender.male).toBe(numberOfPrefeedbacks / 4);
             expect(feedbacks!.gender.female).toBe(numberOfPrefeedbacks / 4);
             expect(feedbacks!.gender.other).toBe(numberOfPrefeedbacks / 4);
@@ -219,7 +220,7 @@ describe('Reads and writes to database', () => {
         expect(closed).toBe(true);
 
         let counter = 0;
-        for (;;) {
+        for (; ;) {
             if (counter > 5) {
                 throw new Error('Could not remove database file');
             }
