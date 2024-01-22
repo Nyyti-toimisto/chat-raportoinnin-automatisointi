@@ -58,8 +58,12 @@ export class ReadController {
         dates: DateRangePipeProp,
         closed = false
     ): Promise<PostFeedBackQuestionSummary[]> {
-        const start = dates.start ? moment(dates.start).hours(0).minutes(0).seconds(0).format('YYYY-MM-DDTHH:mm:ss') : '2000-01-01';
-        const end = dates.end ? moment(dates.end).hours(23).minutes(59).seconds(59).format('YYYY-MM-DDTHH:mm:ss') : '3000-01-01';
+        const start = dates.start
+            ? moment(dates.start).hours(0).minutes(0).seconds(0).format('YYYY-MM-DDTHH:mm:ss')
+            : '2000-01-01';
+        const end = dates.end
+            ? moment(dates.end).hours(23).minutes(59).seconds(59).format('YYYY-MM-DDTHH:mm:ss')
+            : '3000-01-01';
 
         const closedOrOpenFeedbacks = closed ? 'NOT' : '';
 
@@ -116,8 +120,12 @@ export class ReadController {
 
     //TODO: separate the two, querying db and processing the data
     async getPreFeedbackStats(dates: DateRangePipeProp): Promise<PreFeedBackStatsSummary | null> {
-        const start = dates.start ? moment(dates.start).hours(0).minutes(0).seconds(0).format('YYYY-MM-DDTHH:mm:ss') : '2000-01-01';
-        const end = dates.end ? moment(dates.end).hours(23).minutes(59).seconds(59).format('YYYY-MM-DDTHH:mm:ss') : '3000-01-01';
+        const start = dates.start
+            ? moment(dates.start).hours(0).minutes(0).seconds(0).format('YYYY-MM-DDTHH:mm:ss')
+            : '2000-01-01';
+        const end = dates.end
+            ? moment(dates.end).hours(23).minutes(59).seconds(59).format('YYYY-MM-DDTHH:mm:ss')
+            : '3000-01-01';
 
         const raw: PreFeedBackRecord[] = await new Promise((resolve, reject) => {
             this.dao.db.all(
