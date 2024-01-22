@@ -24,7 +24,7 @@ function BarChartContainer({ props }: { props: AgeStats }) {
                     '36-46': props['36-46']
                 },
                 {
-                    label: 'Yli 46',
+                    label: '46 tai yli',
                     'Yli 46': props['yli 46']
                 },
                 {
