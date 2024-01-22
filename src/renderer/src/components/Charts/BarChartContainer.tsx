@@ -24,6 +24,10 @@ function BarChartContainer({ props }: { props: AgeStats }) {
                     '36-46': props['36-46']
                 },
                 {
+                    label: 'Yli 46',
+                    'Yli 46': props['yli 46']
+                },
+                {
                     label: 'Ei sano',
                     'Ei sano': props['Ei sano']
                 }
@@ -34,7 +38,7 @@ function BarChartContainer({ props }: { props: AgeStats }) {
     return (
         <ResponsiveBar
             data={data}
-            keys={['18-24', '25-29', '30-35', '36-46', 'Ei sano']}
+            keys={['18-24', '25-29', '30-35', '36-46', 'Yli 46', 'Ei sano']}
             indexBy="label"
             margin={{ top: 50, right: 20, bottom: 40, left: 20 }}
             padding={0.2}

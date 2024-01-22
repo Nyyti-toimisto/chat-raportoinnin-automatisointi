@@ -80,6 +80,7 @@ export type AgeStats = {
     '25-29': number;
     '30-35': number;
     '36-46': number;
+    'yli 46': number;
     'Ei sano': number;
 };
 export type GenderStats = {
